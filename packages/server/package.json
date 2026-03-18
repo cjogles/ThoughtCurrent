@@ -1,0 +1,21 @@
+{
+  "name": "@thoughtcurrent/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "fix-and-check": "biome check --write src/ && tsc --noEmit"
+  },
+  "dependencies": {
+    "@thoughtcurrent/shared": "workspace:*",
+    "hono": "^4.7.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/bun": "^1.2.0",
+    "typescript": "^5.7.0"
+  }
+}

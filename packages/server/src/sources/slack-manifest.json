@@ -1,0 +1,90 @@
+{
+    "display_information": {
+        "name": "ThoughtCurrent",
+        "description": "Aggregate relevant content (text and images) from available sources and consolidate.",
+        "background_color": "#161617",
+        "long_description": "ThoughtCurrent is a developer tool that aggregates text from diverse sources into a centralized, reliable source of truth. It ingests data from project management systems, communication platforms, observability tools, meeting transcripts, design applications, and local documents, preserving content verbatim for a defined topic or time range.\r\n\r\nIts primary objective is to streamline the creation of PRDs, subtasks, and product documentation by ensuring all relevant context, research, and source material is already collected and organized. The platform is designed with extensibility in mind to support additional capabilities over time."
+    },
+    "features": {
+        "bot_user": {
+            "display_name": "ThoughtCurrent",
+            "always_online": false
+        }
+    },
+    "oauth_config": {
+        "scopes": {
+            "user": [
+                "calls:read",
+                "canvases:read",
+                "channels:history",
+                "channels:read",
+                "emoji:read",
+                "files:read",
+                "groups:history",
+                "groups:read",
+                "im:history",
+                "im:read",
+                "links:read",
+                "mpim:history",
+                "mpim:read",
+                "reactions:read",
+                "remote_files:read",
+                "search:read",
+                "search:read.files",
+                "search:read.im",
+                "search:read.mpim",
+                "search:read.private",
+                "search:read.public",
+                "search:read.users",
+                "stars:read",
+                "team:read",
+                "usergroups:read",
+                "users.profile:read",
+                "users:read"
+            ],
+            "bot": [
+                "app_mentions:read",
+                "bookmarks:read",
+                "calls:read",
+                "canvases:read",
+                "channels:history",
+                "channels:read",
+                "conversations.connect:read",
+                "dnd:read",
+                "emoji:read",
+                "files:read",
+                "groups:history",
+                "groups:read",
+                "im:history",
+                "im:read",
+                "links:read",
+                "lists:read",
+                "metadata.message:read",
+                "mpim:history",
+                "mpim:read",
+                "pins:read",
+                "reactions:read",
+                "reminders:read",
+                "remote_files:read",
+                "search:read.files",
+                "search:read.im",
+                "search:read.mpim",
+                "search:read.private",
+                "search:read.public",
+                "search:read.users",
+                "team.preferences:read",
+                "team:read",
+                "triggers:read",
+                "usergroups:read",
+                "users.profile:read",
+                "users:read",
+                "users:read.email"
+            ]
+        }
+    },
+    "settings": {
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}

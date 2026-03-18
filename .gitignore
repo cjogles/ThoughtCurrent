@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Compilation output (user-generated, not tracked)
+output/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Config with tokens
+~/.config/thoughtcurrent/
+
+# Claude local settings (may contain tokens)
+.claude/settings.local.json
+
+# Bun
+bun.lockb

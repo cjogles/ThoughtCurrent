@@ -1,0 +1,15 @@
+{
+  "name": "thoughtcurrent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '*' build",
+    "fix-and-check": "bun run --filter '*' fix-and-check",
+    "test": "bun test"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
