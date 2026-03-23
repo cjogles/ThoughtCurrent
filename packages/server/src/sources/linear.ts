@@ -1,6 +1,6 @@
 import type {
-	CompilationFilter,
 	CompilationItem,
+	SourceCompilationFilter,
 	SourceHealthCheck,
 } from "@thoughtcurrent/shared";
 
@@ -116,7 +116,7 @@ function matchesKeywords(
 }
 
 export async function compileLinear(
-	filter: CompilationFilter,
+	filter: SourceCompilationFilter,
 ): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 	let cursor: string | null = null;

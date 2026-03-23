@@ -1,5 +1,11 @@
-import type { SourceHealthCheck, SourceType } from "@thoughtcurrent/shared";
+import type {
+	FilterPreset,
+	SourceFilterConfig,
+	SourceHealthCheck,
+	SourceType,
+} from "@thoughtcurrent/shared";
 import { useCallback, useEffect, useState } from "react";
+import { PresetManager } from "./PresetManager.js";
 import { UploadDialog } from "./UploadDialog.js";
 
 const AVAILABLE_SOURCES: { id: SourceType; label: string }[] = [
@@ -22,25 +28,28 @@ const OAUTH_SOURCES: Partial<Record<SourceType, string>> = {
 };
 
 interface Props {
-	onCompile: (filter: {
-		startDate: string;
-		endDate: string;
-		sources: string[];
-		keywords?: string[];
-	}) => void;
+	onCompile: () => void;
 	disabled: boolean;
+	sourceConfigs: Map<SourceType, SourceFilterConfig>;
+	onSourceClick: (source: SourceType) => void;
+	onRemoveSource: (source: SourceType) => void;
+	presets: FilterPreset[];
+	onSavePreset: (name: string) => void;
+	onLoadPreset: (preset: FilterPreset) => void;
+	onDeletePreset: (id: string) => void;
 }
 
-export function CompileForm({ onCompile, disabled }: Props) {
-	const today = new Date().toISOString().split("T")[0];
-	const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000)
-		.toISOString()
-		.split("T")[0];
-
-	const [startDate, setStartDate] = useState(today);
-	const [endDate, setEndDate] = useState(today);
-	const [sources, setSources] = useState<Set<string>>(new Set(["github"]));
-	const [keywords, setKeywords] = useState("");
+export function CompileForm({
+	onCompile,
+	disabled,
+	sourceConfigs,
+	onSourceClick,
+	onRemoveSource,
+	presets,
+	onSavePreset,
+	onLoadPreset,
+	onDeletePreset,
+}: Props) {
 	const [sourceStatuses, setSourceStatuses] = useState<
 		Record<string, SourceHealthCheck>
 	>({});
@@ -63,7 +72,6 @@ export function CompileForm({ onCompile, disabled }: Props) {
 	useEffect(() => {
 		fetchStatuses();
 
-		// Re-check statuses when window regains focus (after OAuth redirect)
 		function onFocus() {
 			fetchStatuses();
 		}
@@ -71,15 +79,15 @@ export function CompileForm({ onCompile, disabled }: Props) {
 		return () => window.removeEventListener("focus", onFocus);
 	}, [fetchStatuses]);
 
-	async function toggleSource(id: SourceType) {
-		// Manual docs opens upload dialog instead of toggling
+	function handleSourceClick(id: SourceType) {
+		// Manual docs opens upload dialog instead of modal
 		if (id === "manual") {
 			setUploadOpen(true);
 			return;
 		}
 
 		// If turning ON an OAuth source, check if it needs auth
-		if (!sources.has(id) && id in OAUTH_SOURCES) {
+		if (!sourceConfigs.has(id) && id in OAUTH_SOURCES) {
 			const status = sourceStatuses[id];
 			const needsAuth =
 				!status ||
@@ -88,33 +96,20 @@ export function CompileForm({ onCompile, disabled }: Props) {
 					status.message.includes("GOOGLE_REFRESH_TOKEN"));
 
 			if (needsAuth) {
-				// Open OAuth flow in a new tab
 				window.open(OAUTH_SOURCES[id], "_blank");
 				return;
 			}
 		}
 
-		setSources((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
+		// If already configured, clicking again opens the modal to edit
+		// If not configured, opens modal to create config
+		onSourceClick(id);
 	}
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		if (sources.size === 0) return;
-
-		onCompile({
-			startDate: new Date(startDate).toISOString(),
-			endDate: new Date(`${endDate}T23:59:59`).toISOString(),
-			sources: [...sources],
-			keywords: keywords
-				.split(",")
-				.map((k) => k.trim())
-				.filter(Boolean),
-		});
+		if (sourceConfigs.size === 0) return;
+		onCompile();
 	}
 
 	function getSourceIndicator(id: SourceType): string {
@@ -134,66 +129,24 @@ export function CompileForm({ onCompile, disabled }: Props) {
 		marginBottom: "1.5rem",
 	};
 
-	const inputStyle: React.CSSProperties = {
-		background: "var(--bg)",
-		border: "1px solid var(--border)",
-		borderRadius: "var(--radius)",
-		color: "var(--fg)",
-		padding: "0.5rem 0.75rem",
-		fontSize: "0.875rem",
-		width: "100%",
-	};
-
 	return (
 		<form onSubmit={handleSubmit} style={cardStyle}>
-			<h2 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>
-				Compile Sources
-			</h2>
-
 			<div
 				style={{
-					display: "grid",
-					gridTemplateColumns: "1fr 1fr",
-					gap: "1rem",
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
 					marginBottom: "1rem",
 				}}
 			>
-				<label>
-					<span
-						style={{
-							display: "block",
-							fontSize: "0.75rem",
-							color: "var(--muted)",
-							marginBottom: "0.25rem",
-						}}
-					>
-						Start Date
-					</span>
-					<input
-						type="date"
-						value={startDate}
-						onChange={(e) => setStartDate(e.target.value)}
-						style={inputStyle}
-					/>
-				</label>
-				<label>
-					<span
-						style={{
-							display: "block",
-							fontSize: "0.75rem",
-							color: "var(--muted)",
-							marginBottom: "0.25rem",
-						}}
-					>
-						End Date
-					</span>
-					<input
-						type="date"
-						value={endDate}
-						onChange={(e) => setEndDate(e.target.value)}
-						style={inputStyle}
-					/>
-				</label>
+				<h2 style={{ fontSize: "1rem", fontWeight: 600 }}>Compile Sources</h2>
+				<PresetManager
+					presets={presets}
+					onSave={onSavePreset}
+					onLoad={onLoadPreset}
+					onDelete={onDeletePreset}
+					hasConfigs={sourceConfigs.size > 0}
+				/>
 			</div>
 
 			<div style={{ marginBottom: "1rem" }}>
@@ -205,29 +158,47 @@ export function CompileForm({ onCompile, disabled }: Props) {
 						marginBottom: "0.5rem",
 					}}
 				>
-					Sources
+					Sources — click to configure filters
 				</span>
 				<div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
 					{AVAILABLE_SOURCES.map((s) => {
 						const indicator = getSourceIndicator(s.id);
-						const isSelected = sources.has(s.id);
+						const isConfigured = sourceConfigs.has(s.id);
 						return (
 							<button
 								key={s.id}
 								type="button"
-								onClick={() => toggleSource(s.id)}
+								onClick={() => handleSourceClick(s.id)}
+								onContextMenu={(e) => {
+									e.preventDefault();
+									if (isConfigured) onRemoveSource(s.id);
+								}}
 								style={{
 									padding: "0.375rem 0.75rem",
 									borderRadius: "var(--radius)",
-									border: `1px solid ${isSelected ? "var(--accent)" : "var(--border)"}`,
-									background: isSelected ? "var(--accent)" : "transparent",
-									color: isSelected ? "#fff" : "var(--muted)",
+									border: `1px solid ${isConfigured ? "var(--accent)" : "var(--border)"}`,
+									background: isConfigured ? "var(--accent)" : "transparent",
+									color: isConfigured ? "#fff" : "var(--muted)",
 									cursor: "pointer",
 									fontSize: "0.8125rem",
+									position: "relative",
 								}}
 							>
 								{s.label}
-								{indicator && (
+								{isConfigured && (
+									<span
+										style={{
+											display: "inline-block",
+											width: 6,
+											height: 6,
+											borderRadius: "50%",
+											background: "#fff",
+											marginLeft: "0.375rem",
+											verticalAlign: "middle",
+										}}
+									/>
+								)}
+								{indicator && !isConfigured && (
 									<span
 										style={{
 											color: indicator.includes("\u2713")
@@ -243,46 +214,40 @@ export function CompileForm({ onCompile, disabled }: Props) {
 						);
 					})}
 				</div>
-			</div>
-
-			<div style={{ marginBottom: "1rem" }}>
-				<label>
-					<span
+				{sourceConfigs.size > 0 && (
+					<p
 						style={{
-							display: "block",
-							fontSize: "0.75rem",
+							fontSize: "0.6875rem",
 							color: "var(--muted)",
-							marginBottom: "0.25rem",
+							marginTop: "0.375rem",
 						}}
 					>
-						Keywords (comma-separated, optional)
-					</span>
-					<input
-						type="text"
-						value={keywords}
-						onChange={(e) => setKeywords(e.target.value)}
-						placeholder="e.g. auth, login, SSO"
-						style={inputStyle}
-					/>
-				</label>
+						Right-click a source to remove it
+					</p>
+				)}
 			</div>
 
 			<button
 				type="submit"
-				disabled={disabled || sources.size === 0}
+				disabled={disabled || sourceConfigs.size === 0}
 				style={{
 					padding: "0.5rem 1.5rem",
 					borderRadius: "var(--radius)",
 					border: "none",
 					background:
-						disabled || sources.size === 0 ? "var(--border)" : "var(--accent)",
+						disabled || sourceConfigs.size === 0
+							? "var(--border)"
+							: "var(--accent)",
 					color: "#fff",
-					cursor: disabled || sources.size === 0 ? "not-allowed" : "pointer",
+					cursor:
+						disabled || sourceConfigs.size === 0 ? "not-allowed" : "pointer",
 					fontSize: "0.875rem",
 					fontWeight: 500,
 				}}
 			>
-				{disabled ? "Compiling..." : "Compile"}
+				{disabled
+					? "Compiling..."
+					: `Compile (${sourceConfigs.size} source${sourceConfigs.size === 1 ? "" : "s"})`}
 			</button>
 
 			<UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)} />

@@ -1,6 +1,6 @@
 import type {
-	CompilationFilter,
 	CompilationItem,
+	SourceCompilationFilter,
 	SourceHealthCheck,
 } from "@thoughtcurrent/shared";
 
@@ -109,7 +109,7 @@ function matchesKeywords(
 }
 
 export async function compileTrello(
-	filter: CompilationFilter,
+	filter: SourceCompilationFilter,
 ): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 

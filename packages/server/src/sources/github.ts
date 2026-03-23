@@ -1,6 +1,6 @@
 import type {
-	CompilationFilter,
 	CompilationItem,
+	SourceCompilationFilter,
 	SourceHealthCheck,
 } from "@thoughtcurrent/shared";
 
@@ -77,7 +77,7 @@ function matchesKeywords(
 }
 
 export async function compileGitHub(
-	filter: CompilationFilter,
+	filter: SourceCompilationFilter,
 ): Promise<CompilationItem[]> {
 	const repo = getRepo();
 	const items: CompilationItem[] = [];

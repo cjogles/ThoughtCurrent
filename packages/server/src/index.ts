@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { authRoutes } from "./routes/auth.js";
 import { compileRoutes } from "./routes/compile.js";
+import { presetRoutes } from "./routes/presets.js";
+import { slackMetaRoutes } from "./routes/slack-meta.js";
 import { statusRoutes } from "./routes/status.js";
 import { uploadRoutes } from "./routes/upload.js";
 
@@ -14,6 +16,8 @@ app.use(
 
 app.route("/api/auth", authRoutes);
 app.route("/api/compile", compileRoutes);
+app.route("/api/presets", presetRoutes);
+app.route("/api/slack", slackMetaRoutes);
 app.route("/api/status", statusRoutes);
 app.route("/api/upload", uploadRoutes);
 
@@ -26,5 +30,5 @@ console.log(`ThoughtCurrent server running on http://localhost:${port}`);
 export default {
 	port,
 	fetch: app.fetch,
-	idleTimeout: 120,
+	idleTimeout: 255,
 };

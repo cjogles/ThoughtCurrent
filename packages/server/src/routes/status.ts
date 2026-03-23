@@ -1,5 +1,6 @@
 import type { SourceHealthCheck, SourceType } from "@thoughtcurrent/shared";
 import { Hono } from "hono";
+import { checkFigmaHealth } from "../sources/figma.js";
 import { checkGitHubHealth } from "../sources/github.js";
 import { checkGmailHealth } from "../sources/gmail.js";
 import { checkGranolaHealth } from "../sources/granola.js";
@@ -12,6 +13,7 @@ export const statusRoutes = new Hono();
 const healthCheckers: Partial<
 	Record<SourceType, () => Promise<SourceHealthCheck>>
 > = {
+	figma: checkFigmaHealth,
 	github: checkGitHubHealth,
 	gmail: checkGmailHealth,
 	granola: checkGranolaHealth,

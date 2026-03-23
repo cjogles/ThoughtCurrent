@@ -1,10 +1,13 @@
+import { mkdir } from "node:fs/promises";
+import { resolve } from "node:path";
 import type {
-	CompilationFilter,
 	CompilationItem,
+	SourceCompilationFilter,
 	SourceHealthCheck,
 } from "@thoughtcurrent/shared";
 
 const GMAIL_API = "https://gmail.googleapis.com/gmail/v1";
+const OUTPUT_DIR = resolve(import.meta.dir, "../../../../output");
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 
@@ -115,6 +118,13 @@ interface GmailMessage {
 	threadId: string;
 }
 
+interface GmailPart {
+	mimeType: string;
+	filename?: string;
+	body?: { data?: string; size: number; attachmentId?: string };
+	parts?: GmailPart[];
+}
+
 interface GmailMessageFull {
 	id: string;
 	threadId: string;
@@ -123,15 +133,8 @@ interface GmailMessageFull {
 	payload: {
 		headers: Array<{ name: string; value: string }>;
 		mimeType: string;
-		body?: { data?: string; size: number };
-		parts?: Array<{
-			mimeType: string;
-			body?: { data?: string; size: number };
-			parts?: Array<{
-				mimeType: string;
-				body?: { data?: string; size: number };
-			}>;
-		}>;
+		body?: { data?: string; size: number; attachmentId?: string };
+		parts?: GmailPart[];
 	};
 }
 
@@ -198,6 +201,77 @@ function extractTextBody(payload: GmailMessageFull["payload"]): string {
 	return "(no text body)";
 }
 
+interface ImageAttachment {
+	filename: string;
+	mimeType: string;
+	attachmentId: string;
+}
+
+function findImageParts(parts: GmailPart[] | undefined): ImageAttachment[] {
+	const images: ImageAttachment[] = [];
+	if (!parts) return images;
+
+	for (const part of parts) {
+		if (
+			part.mimeType.startsWith("image/") &&
+			part.body?.attachmentId &&
+			part.filename
+		) {
+			images.push({
+				filename: part.filename,
+				mimeType: part.mimeType,
+				attachmentId: part.body.attachmentId,
+			});
+		}
+		if (part.parts) {
+			images.push(...findImageParts(part.parts));
+		}
+	}
+	return images;
+}
+
+function decodeBase64UrlToBuffer(data: string): Buffer {
+	const base64 = data.replace(/-/g, "+").replace(/_/g, "/");
+	return Buffer.from(base64, "base64");
+}
+
+async function downloadEmailImages(
+	msgId: string,
+	images: ImageAttachment[],
+): Promise<string[]> {
+	if (images.length === 0) return [];
+
+	const imagesDir = resolve(OUTPUT_DIR, "gmail/images");
+	await mkdir(imagesDir, { recursive: true });
+
+	const savedPaths: string[] = [];
+
+	for (const img of images) {
+		try {
+			const data = await gmailApi<{ data: string; size: number }>(
+				`/users/me/messages/${msgId}/attachments/${img.attachmentId}`,
+			);
+
+			const buffer = decodeBase64UrlToBuffer(data.data);
+			const ext = img.mimeType.split("/")[1] ?? "png";
+			const safeName = img.filename
+				.replace(/[^a-zA-Z0-9._-]/g, "-")
+				.substring(0, 80);
+			const outPath = resolve(imagesDir, `${msgId}-${safeName}`);
+
+			await Bun.write(outPath, buffer);
+			savedPaths.push(outPath);
+			console.log(`  Gmail image: saved ${safeName} (${buffer.length} bytes)`);
+		} catch (err) {
+			console.log(
+				`  Gmail image: failed to download ${img.filename}: ${err instanceof Error ? err.message : err}`,
+			);
+		}
+	}
+
+	return savedPaths;
+}
+
 function getHeader(
 	headers: Array<{ name: string; value: string }>,
 	name: string,
@@ -216,7 +290,7 @@ function matchesKeywords(
 }
 
 export async function compileGmail(
-	filter: CompilationFilter,
+	filter: SourceCompilationFilter,
 ): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 
@@ -227,9 +301,21 @@ export async function compileGmail(
 	const beforeEpoch = Math.floor(endDate.getTime() / 1000);
 
 	let query = `after:${afterEpoch} before:${beforeEpoch}`;
+
+	// Build OR conditions: keywords match in body/subject, senders match in from
+	const orParts: string[] = [];
 	if (filter.keywords && filter.keywords.length > 0) {
-		const keywordQuery = filter.keywords.map((kw) => `"${kw}"`).join(" OR ");
-		query = `${query} {${keywordQuery}}`;
+		for (const kw of filter.keywords) {
+			orParts.push(`"${kw}"`);
+		}
+	}
+	if (filter.senders && filter.senders.length > 0) {
+		for (const sender of filter.senders) {
+			orParts.push(`from:${sender}`);
+		}
+	}
+	if (orParts.length > 0) {
+		query = `${query} {${orParts.join(" ")}}`;
 	}
 
 	// List messages matching the query
@@ -270,15 +356,38 @@ export async function compileGmail(
 			const date = getHeader(msg.payload.headers, "Date") ?? "";
 			const body = extractTextBody(msg.payload);
 
-			if (!matchesKeywords(`${subject} ${body}`, filter.keywords)) continue;
+			// Pass if keywords match in subject/body OR sender matches
+			const keywordMatch = matchesKeywords(
+				`${subject} ${body}`,
+				filter.keywords,
+			);
+			const senderMatch =
+				filter.senders &&
+				filter.senders.length > 0 &&
+				filter.senders.some((s) =>
+					from.toLowerCase().includes(s.toLowerCase()),
+				);
+			if (!keywordMatch && !senderMatch) continue;
 
 			const timestamp = new Date(Number(msg.internalDate)).toISOString();
+
+			// Extract and download image attachments
+			const imageParts = findImageParts(msg.payload.parts);
+			const imagePaths = await downloadEmailImages(msg.id, imageParts);
+
+			let contentBody = `From: ${from}\nTo: ${to}\nDate: ${date}\nSubject: ${subject}\n\n${body}`;
+			if (imagePaths.length > 0) {
+				contentBody += `\n\nAttachments (${imagePaths.length} image(s)):\n`;
+				for (const p of imagePaths) {
+					contentBody += `  - ${p}\n`;
+				}
+			}
 
 			items.push({
 				source: "gmail",
 				externalId: msg.id,
 				title: subject,
-				content: `From: ${from}\nTo: ${to}\nDate: ${date}\nSubject: ${subject}\n\n${body}`,
+				content: contentBody,
 				author: from,
 				sourceUrl: null,
 				timestamp,
@@ -288,6 +397,8 @@ export async function compileGmail(
 					from,
 					to,
 					subject,
+					imageCount: imagePaths.length,
+					imagePaths,
 				},
 			});
 		} catch {

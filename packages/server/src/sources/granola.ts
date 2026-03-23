@@ -2,8 +2,9 @@ import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { resolve } from "node:path";
 import type {
-	CompilationFilter,
 	CompilationItem,
+	GranolaFilterConfig,
+	SourceCompilationFilter,
 	SourceHealthCheck,
 } from "@thoughtcurrent/shared";
 
@@ -55,42 +56,49 @@ async function granolaApi<T>(
 	body: Record<string, unknown>,
 ): Promise<T> {
 	const token = await getAccessToken();
-	const res = await fetch(`${GRANOLA_API}${path}`, {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(body),
-	});
+	const controller = new AbortController();
+	const timeout = setTimeout(() => controller.abort(), 30_000);
 
-	if (res.status === 401 || res.status === 403) {
-		throw new Error(
-			"Granola token expired. Open the Granola desktop app to refresh authentication.",
-		);
+	try {
+		const res = await fetch(`${GRANOLA_API}${path}`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+			signal: controller.signal,
+		});
+
+		if (res.status === 401 || res.status === 403) {
+			throw new Error(
+				"Granola token expired. Open the Granola desktop app to refresh authentication.",
+			);
+		}
+
+		if (!res.ok) {
+			throw new Error(
+				`Granola API ${path} HTTP ${res.status}: ${res.statusText}`,
+			);
+		}
+
+		return res.json() as Promise<T>;
+	} finally {
+		clearTimeout(timeout);
 	}
-
-	if (!res.ok) {
-		throw new Error(
-			`Granola API ${path} HTTP ${res.status}: ${res.statusText}`,
-		);
-	}
-
-	return res.json() as Promise<T>;
 }
 
 async function fetchDocuments(
-	startDate: string,
-	endDate: string,
+	startDate?: string,
+	endDate?: string,
 ): Promise<GranolaDocument[]> {
 	const docs: GranolaDocument[] = [];
-	const start = new Date(startDate).getTime();
-	const end = new Date(endDate).getTime();
+	const start = startDate ? new Date(startDate).getTime() : null;
+	const end = endDate ? new Date(endDate).getTime() : null;
 	let offset = 0;
 	const limit = 100;
-	let hasMore = true;
 
-	while (hasMore) {
+	while (true) {
 		const data = await granolaApi<{ docs: GranolaDocument[] }>(
 			"/v2/get-documents",
 			{ limit, offset, include_last_viewed_panel: false },
@@ -101,22 +109,22 @@ async function fetchDocuments(
 
 		for (const doc of batch) {
 			const docTime = new Date(doc.created_at).getTime();
-			if (docTime >= start && docTime <= end) {
-				docs.push(doc);
-			}
+			if (start && docTime < start) continue;
+			if (end && docTime > end) continue;
+			docs.push(doc);
 		}
 
 		if (batch.length < limit) break;
 
-		// Documents come newest-first — stop if oldest in batch is before our range
-		const oldestInBatch = new Date(
-			batch[batch.length - 1].created_at,
-		).getTime();
-		if (oldestInBatch < start) {
-			hasMore = false;
-		} else {
-			offset += limit;
+		// Documents come newest-first — stop if oldest in batch is before our start
+		if (start) {
+			const oldestInBatch = new Date(
+				batch[batch.length - 1].created_at,
+			).getTime();
+			if (oldestInBatch < start) break;
 		}
+
+		offset += limit;
 	}
 
 	return docs;
@@ -161,48 +169,127 @@ function matchesKeywords(
 	return keywords.some((kw) => lower.includes(kw.toLowerCase()));
 }
 
-export async function compileGranola(
-	filter: CompilationFilter,
+async function processDocument(
+	doc: GranolaDocument,
+	keywords: string[] | undefined,
+): Promise<CompilationItem | null> {
+	const attendees = getAttendees(doc);
+	const date = doc.created_at.split("T")[0];
+	const label = `"${doc.title}" (${date})`;
+	const metadataText = [doc.title, ...attendees].join(" ");
+	const metadataMatch = matchesKeywords(metadataText, keywords);
+	const hasKeywords = keywords && keywords.length > 0;
+
+	const transcript = await fetchTranscript(doc.id);
+	if (transcript.length === 0) {
+		console.log(`  SKIP ${label} — no transcript`);
+		return null;
+	}
+
+	const content = formatTranscript(transcript);
+	if (!content) {
+		console.log(`  SKIP ${label} — empty transcript`);
+		return null;
+	}
+
+	if (hasKeywords && !metadataMatch) {
+		if (!matchesKeywords(content, keywords)) {
+			console.log(`  SKIP ${label} — no keyword match`);
+			return null;
+		}
+		console.log(`  MATCH ${label} — keyword found in transcript`);
+	} else if (hasKeywords && metadataMatch) {
+		console.log(`  MATCH ${label} — keyword found in title/attendees`);
+	} else {
+		console.log(`  INCLUDE ${label} — no keyword filter`);
+	}
+
+	return {
+		source: "granola",
+		externalId: doc.id,
+		title: doc.title || "Untitled Meeting",
+		content,
+		author: attendees.join(", ") || null,
+		sourceUrl: null,
+		timestamp: doc.created_at,
+		metadata: {
+			type: "transcript",
+			attendees,
+		},
+	};
+}
+
+const BATCH_CONCURRENCY = 5;
+
+export async function compileGranolaWithConfig(
+	config: GranolaFilterConfig,
 ): Promise<CompilationItem[]> {
+	const startTime = Date.now();
+	console.log(
+		`Granola: fetching document list${config.startDate ? ` from ${config.startDate.split("T")[0]}` : ""}${config.endDate ? ` to ${config.endDate.split("T")[0]}` : " (all history)"}...`,
+	);
+
+	const documents = await fetchDocuments(config.startDate, config.endDate);
+	const hasKeywords = config.keywords && config.keywords.length > 0;
+	const listTime = ((Date.now() - startTime) / 1000).toFixed(1);
+	console.log(
+		`Granola: found ${documents.length} documents in ${listTime}s${hasKeywords ? `\n  Keywords: ${config.keywords?.join(", ")}` : ""}`,
+	);
+
+	if (documents.length === 0) return [];
+
+	// Log the date range of docs found
+	const oldest = documents[documents.length - 1].created_at.split("T")[0];
+	const newest = documents[0].created_at.split("T")[0];
+	console.log(`Granola: date range of docs: ${oldest} to ${newest}`);
+
 	const items: CompilationItem[] = [];
-	const documents = await fetchDocuments(filter.startDate, filter.endDate);
+	const transcriptStart = Date.now();
 
-	for (const doc of documents) {
-		try {
-			const transcript = await fetchTranscript(doc.id);
-			if (transcript.length === 0) continue;
+	for (let i = 0; i < documents.length; i += BATCH_CONCURRENCY) {
+		const batch = documents.slice(i, i + BATCH_CONCURRENCY);
+		const batchNum = Math.floor(i / BATCH_CONCURRENCY) + 1;
+		const totalBatches = Math.ceil(documents.length / BATCH_CONCURRENCY);
+		console.log(
+			`Granola: batch ${batchNum}/${totalBatches} (docs ${i + 1}-${i + batch.length})`,
+		);
 
-			const content = formatTranscript(transcript);
-			if (!content) continue;
-			if (!matchesKeywords(content, filter.keywords)) continue;
+		const results = await Promise.allSettled(
+			batch.map((doc) => processDocument(doc, config.keywords)),
+		);
 
-			const attendees = getAttendees(doc);
-
-			items.push({
-				source: "granola",
-				externalId: doc.id,
-				title: doc.title || "Untitled Meeting",
-				content,
-				author: attendees.join(", ") || null,
-				sourceUrl: null,
-				timestamp: doc.created_at,
-				metadata: {
-					type: "transcript",
-					attendees,
-				},
-			});
-		} catch {
-			console.log(
-				`Skipping Granola document ${doc.id}: transcript unavailable`,
-			);
+		for (let j = 0; j < results.length; j++) {
+			const result = results[j];
+			if (result.status === "fulfilled" && result.value) {
+				items.push(result.value);
+			} else if (result.status === "rejected") {
+				const doc = batch[j];
+				console.log(`  ERROR "${doc.title}" (${doc.id}): ${result.reason}`);
+			}
 		}
 	}
+
+	const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+	const transcriptTime = ((Date.now() - transcriptStart) / 1000).toFixed(1);
+	console.log(
+		`Granola: done — ${items.length}/${documents.length} matched, ${transcriptTime}s for transcripts, ${totalTime}s total`,
+	);
 
 	items.sort(
 		(a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
 	);
 
 	return items;
+}
+
+export async function compileGranola(
+	filter: SourceCompilationFilter,
+): Promise<CompilationItem[]> {
+	return compileGranolaWithConfig({
+		keywords: filter.keywords,
+		startDate: filter.startDate,
+		endDate: filter.endDate,
+	});
 }
 
 // Cache health check for 60s
