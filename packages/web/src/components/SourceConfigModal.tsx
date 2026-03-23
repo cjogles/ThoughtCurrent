@@ -49,7 +49,11 @@ export function SourceConfigModal({
 					);
 				})
 				.finally(() => setSourceValidating(false));
-		} else if (source === "granola" || source === "figma") {
+		} else if (
+			source === "granola" ||
+			source === "figma" ||
+			source === "trello"
+		) {
 			setSourceValidating(true);
 			fetch("/api/status")
 				.then((res) => res.json())
@@ -113,7 +117,7 @@ export function SourceConfigModal({
 		flex: 1,
 	};
 
-	const validatedSources = ["slack", "granola", "figma"] as const;
+	const validatedSources = ["slack", "granola", "figma", "trello"] as const;
 	const needsValidation = (validatedSources as readonly string[]).includes(
 		source,
 	);
@@ -159,6 +163,24 @@ export function SourceConfigModal({
 						>
 							{sourceError}
 						</div>
+						{sourceError?.includes("/api/auth/") && (
+							<a
+								href={`/api/auth/${source}`}
+								style={{
+									display: "inline-block",
+									marginTop: "1rem",
+									padding: "0.5rem 1.25rem",
+									background: "var(--accent)",
+									color: "#fff",
+									borderRadius: "var(--radius)",
+									textDecoration: "none",
+									fontSize: "0.875rem",
+									fontWeight: 500,
+								}}
+							>
+								Connect {SOURCE_LABELS[source]}
+							</a>
+						)}
 					</div>
 				</div>
 			</div>

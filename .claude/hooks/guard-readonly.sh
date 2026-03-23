@@ -24,8 +24,9 @@ if echo "$COMMAND" | grep -qiE "git\s+(reset\s+--hard|checkout\s+--|clean\s+-f|m
   exit 2
 fi
 
-# Block write API calls via curl
-if echo "$COMMAND" | grep -qiE "curl\s+.*-X\s+(POST|PUT|PATCH|DELETE)"; then
+# Block write API calls via curl (allow localhost for ThoughtCurrent's own server)
+if echo "$COMMAND" | grep -qiE "curl\s+.*-X\s+(POST|PUT|PATCH|DELETE)" && \
+   ! echo "$COMMAND" | grep -qiE "localhost|127\.0\.0\.1"; then
   echo "BLOCKED: ThoughtCurrent is read-only. No write API calls allowed." >&2
   exit 2
 fi

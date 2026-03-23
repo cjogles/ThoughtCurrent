@@ -5,6 +5,7 @@ import type {
 } from "@thoughtcurrent/shared";
 
 const TRELLO_API = "https://api.trello.com/1";
+const TRELLO_AUTH_URL = "https://trello.com/1/authorize";
 
 function getApiKey(): string {
 	const key = process.env.TRELLO_API_KEY;
@@ -16,6 +17,21 @@ function getToken(): string {
 	const token = process.env.TRELLO_TOKEN;
 	if (!token) throw new Error("TRELLO_TOKEN not set");
 	return token;
+}
+
+export function getTrelloAuthUrl(): string {
+	const port = Number(process.env.PORT) || 3141;
+	const callbackUrl = `http://localhost:${port}/api/auth/trello/callback`;
+	const params = new URLSearchParams({
+		expiration: "never",
+		name: "ThoughtCurrent",
+		scope: "read",
+		response_type: "fragment",
+		key: getApiKey(),
+		callback_url: callbackUrl,
+		return_url: callbackUrl,
+	});
+	return `${TRELLO_AUTH_URL}?${params.toString()}`;
 }
 
 function authParams(): string {
@@ -56,6 +72,18 @@ interface TrelloCard {
 	idMembers: string[];
 	labels: Array<{ name: string; color: string }>;
 	closed: boolean;
+}
+
+interface TrelloCheckItem {
+	id: string;
+	name: string;
+	state: "complete" | "incomplete";
+}
+
+interface TrelloChecklist {
+	id: string;
+	name: string;
+	checkItems: TrelloCheckItem[];
 }
 
 interface TrelloAction {
@@ -118,21 +146,32 @@ export async function compileTrello(
 		"filter=open&fields=id,name,url,closed",
 	);
 
+	const startMs = new Date(filter.startDate).getTime();
+	const endMs = new Date(filter.endDate).getTime();
+
 	for (const board of boards) {
 		const cards = await trelloGet<TrelloCard[]>(
 			`/boards/${board.id}/cards`,
-			`fields=id,name,desc,url,dateLastActivity,idMembers,labels,closed&since=${filter.startDate}&before=${filter.endDate}`,
+			"fields=id,name,desc,url,dateLastActivity,idMembers,labels,closed",
 		);
 
 		for (const card of cards) {
+			// Filter by dateLastActivity in code — the Trello API's since/before
+			// params on /boards/{id}/cards filter by creation date, not activity
+			const activityMs = new Date(card.dateLastActivity).getTime();
+			if (activityMs < startMs || activityMs > endMs) continue;
+
 			const searchText = `${card.name} ${card.desc}`;
 			if (!matchesKeywords(searchText, filter.keywords)) continue;
 
-			// Fetch comments for this card
-			const actions = await trelloGet<TrelloAction[]>(
-				`/cards/${card.id}/actions`,
-				`filter=commentCard&since=${filter.startDate}&before=${filter.endDate}`,
-			);
+			// Fetch comments and checklists for this card
+			const [actions, checklists] = await Promise.all([
+				trelloGet<TrelloAction[]>(
+					`/cards/${card.id}/actions`,
+					`filter=commentCard&since=${filter.startDate}&before=${filter.endDate}`,
+				),
+				trelloGet<TrelloChecklist[]>(`/cards/${card.id}/checklists`),
+			]);
 
 			const assignees: string[] = [];
 			for (const mid of card.idMembers) {
@@ -144,6 +183,16 @@ export async function compileTrello(
 			const labels = card.labels.map((l) => l.name).filter(Boolean);
 			if (labels.length > 0) {
 				lines.push("", `**Labels:** ${labels.join(", ")}`);
+			}
+
+			if (checklists.length > 0) {
+				for (const cl of checklists) {
+					lines.push("", `### ${cl.name}`, "");
+					for (const item of cl.checkItems) {
+						const check = item.state === "complete" ? "x" : " ";
+						lines.push(`- [${check}] ${item.name}`);
+					}
+				}
 			}
 
 			if (actions.length > 0) {
@@ -191,11 +240,21 @@ export async function checkTrelloHealth(): Promise<SourceHealthCheck> {
 
 	const now = new Date().toISOString();
 
-	if (!process.env.TRELLO_API_KEY || !process.env.TRELLO_TOKEN) {
+	if (!process.env.TRELLO_API_KEY) {
 		return {
 			source: "trello",
 			status: "not_configured",
-			message: "TRELLO_API_KEY and/or TRELLO_TOKEN not set",
+			message:
+				"TRELLO_API_KEY not set. Create a Trello Workspace, then get your API key at trello.com/power-ups/admin.",
+			checkedAt: now,
+		};
+	}
+
+	if (!process.env.TRELLO_TOKEN) {
+		return {
+			source: "trello",
+			status: "error",
+			message: "TRELLO_TOKEN not set. Visit /api/auth/trello to authorize.",
 			checkedAt: now,
 		};
 	}
