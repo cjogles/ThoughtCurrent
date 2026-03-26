@@ -149,6 +149,52 @@ Presets are named filter configurations that define which sources to pull from, 
 - `my-project-auth-bug` — last 3 months, keywords: ["auth", "session", "token"]
 - `my-project-q1` — Jan-Mar date range, planning channels only
 
+### What Can You Do With It?
+
+Once a preset is configured, just talk naturally from any project. Claude compiles the data, reads the output, and answers with cross-tool context you'd normally have to tab between 7 apps to assemble.
+
+**Morning catch-up:**
+```
+"Compile my-project and catch me up"
+→ Summary of new PRs, Linear issues, Slack threads, Sentry errors, Trello card movements
+```
+
+**Bug investigation:**
+```
+"Users are seeing a null error on the editor page — what do we know?"
+→ Cross-references Sentry stack traces with Slack discussions and Linear issues
+```
+
+**PR writing with business context:**
+```
+"I just finished the checklist feature, write the PR description"
+→ Pulls context from the Linear ticket, Slack design discussions, and Trello card
+```
+
+**Sprint planning:**
+```
+"What should we prioritize this week?"
+→ Top Sentry errors by frequency, open Linear issues, active Trello cards, unresolved Slack threads
+```
+
+**Pre-meeting prep:**
+```
+"I have a sync in 10 minutes, what do I need to know?"
+→ Last meeting's Granola transcript + what's changed since in Slack, Linear, and GitHub
+```
+
+**Code review with full context:**
+```
+"Review PR #47 on org/my-project"
+→ PR diff alongside the Linear ticket, related Slack discussion, and Sentry errors in that code path
+```
+
+**Model/infra health check:**
+```
+"Is our ML endpoint healthy?"
+→ HuggingFace endpoint status — running, scaled down, or erroring
+```
+
 ### MCP Tools
 
 | Tool | Args | Description |
