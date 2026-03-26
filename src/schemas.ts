@@ -75,6 +75,7 @@ export const GenericSourceConfigSchema = z.object({
 	endDate: z.string(),
 	keywords: z.array(z.string()).optional(),
 	senders: z.array(z.string()).optional(),
+	repos: z.array(z.string()).optional(),
 });
 
 export const SourceFilterConfigSchema = z.discriminatedUnion("source", [

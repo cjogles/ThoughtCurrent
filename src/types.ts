@@ -73,6 +73,7 @@ export interface GenericSourceConfig {
 	endDate: string;
 	keywords?: string[];
 	senders?: string[];
+	repos?: string[];
 }
 
 export type SourceFilterConfig =
@@ -102,6 +103,7 @@ export interface SourceCompilationFilter {
 	sources: SourceType[];
 	keywords?: string[];
 	senders?: string[];
+	repos?: string[];
 }
 
 export interface FilterPreset {

@@ -57,16 +57,6 @@ async function gh(args: string[]): Promise<string> {
 	return stdout.trim();
 }
 
-function getRepo(): string {
-	const repo = process.env.THOUGHTCURRENT_GITHUB_REPO;
-	if (!repo) {
-		throw new Error(
-			"THOUGHTCURRENT_GITHUB_REPO not set. Set it to owner/repo (e.g. myorg/myproject)",
-		);
-	}
-	return repo;
-}
-
 function matchesKeywords(
 	text: string,
 	keywords: string[] | undefined,
@@ -76,10 +66,10 @@ function matchesKeywords(
 	return keywords.some((kw) => lower.includes(kw.toLowerCase()));
 }
 
-export async function compileGitHub(
+async function compileRepo(
+	repo: string,
 	filter: SourceCompilationFilter,
 ): Promise<CompilationItem[]> {
-	const repo = getRepo();
 	const items: CompilationItem[] = [];
 
 	// Fetch issues
@@ -214,29 +204,39 @@ export async function compileGitHub(
 	return items;
 }
 
+export async function compileGitHub(
+	filter: SourceCompilationFilter,
+): Promise<CompilationItem[]> {
+	const repos = filter.repos;
+	if (!repos || repos.length === 0) {
+		throw new Error(
+			"No repos configured. Add repos to your preset's GitHub source config (e.g. [\"org/repo\"])",
+		);
+	}
+
+	const allItems: CompilationItem[] = [];
+	for (const repo of repos) {
+		const items = await compileRepo(repo, filter);
+		allItems.push(...items);
+	}
+
+	allItems.sort(
+		(a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+	);
+
+	return allItems;
+}
+
 export async function checkGitHubHealth(): Promise<SourceHealthCheck> {
 	const now = new Date().toISOString();
 
 	try {
-		const status = await gh(["auth", "status"]);
-		const repo = process.env.THOUGHTCURRENT_GITHUB_REPO;
-
-		if (!repo) {
-			return {
-				source: "github",
-				status: "error",
-				message: "gh CLI authenticated but THOUGHTCURRENT_GITHUB_REPO not set",
-				checkedAt: now,
-			};
-		}
-
-		// Verify repo access
-		await gh(["api", `/repos/${repo}`, "--jq", ".full_name"]);
+		await gh(["auth", "status"]);
 
 		return {
 			source: "github",
 			status: "connected",
-			message: `Authenticated and can access ${repo}`,
+			message: "gh CLI authenticated. Repos are configured per-preset.",
 			checkedAt: now,
 		};
 	} catch (err) {

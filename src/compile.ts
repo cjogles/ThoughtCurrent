@@ -73,6 +73,7 @@ function genericConfigToLegacy(
 		sources: [config.source],
 		keywords: config.keywords,
 		senders: config.senders,
+		repos: config.repos,
 	};
 }
 

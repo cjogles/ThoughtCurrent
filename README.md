@@ -54,7 +54,7 @@ SLACK_USER_TOKEN=xoxp-...
 SLACK_BOT_TOKEN=xoxb-...
 
 # GitHub (uses gh CLI auth — just run `gh auth login` separately)
-THOUGHTCURRENT_GITHUB_REPO=org/repo
+# No env var needed — repos are configured per-preset (e.g. ["org/repo"])
 
 # Gmail (OAuth — run auth script in step 3)
 GOOGLE_CLIENT_ID=your-client-id
