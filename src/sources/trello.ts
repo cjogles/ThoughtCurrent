@@ -63,12 +63,18 @@ interface TrelloBoard {
 	closed: boolean;
 }
 
+interface TrelloList {
+	id: string;
+	name: string;
+}
+
 interface TrelloCard {
 	id: string;
 	name: string;
 	desc: string;
 	url: string;
 	dateLastActivity: string;
+	idList: string;
 	idMembers: string[];
 	labels: Array<{ name: string; color: string }>;
 	closed: boolean;
@@ -150,10 +156,17 @@ export async function compileTrello(
 	const endMs = new Date(filter.endDate).getTime();
 
 	for (const board of boards) {
-		const cards = await trelloGet<TrelloCard[]>(
-			`/boards/${board.id}/cards`,
-			"fields=id,name,desc,url,dateLastActivity,idMembers,labels,closed",
-		);
+		const [cards, lists] = await Promise.all([
+			trelloGet<TrelloCard[]>(
+				`/boards/${board.id}/cards`,
+				"fields=id,name,desc,url,dateLastActivity,idList,idMembers,labels,closed",
+			),
+			trelloGet<TrelloList[]>(
+				`/boards/${board.id}/lists`,
+				"fields=id,name",
+			),
+		]);
+		const listMap = new Map(lists.map((l) => [l.id, l.name]));
 
 		for (const card of cards) {
 			// Filter by dateLastActivity in code — the Trello API's since/before
@@ -204,10 +217,12 @@ export async function compileTrello(
 				}
 			}
 
+			const listName = listMap.get(card.idList) ?? "Unknown";
+
 			items.push({
 				source: "trello",
 				externalId: card.id,
-				title: `${board.name} / ${card.name}`,
+				title: `${board.name} / ${listName} / ${card.name}`,
 				content: lines.join("\n"),
 				author: assignees.join(", ") || null,
 				sourceUrl: card.url,
@@ -215,6 +230,7 @@ export async function compileTrello(
 				metadata: {
 					type: "card",
 					board: board.name,
+					list: listName,
 					labels,
 					commentCount: actions.length,
 				},

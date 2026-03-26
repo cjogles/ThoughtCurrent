@@ -152,8 +152,14 @@ export async function clearErrorReport(
 	source: string,
 ): Promise<void> {
 	const errorDir = resolve(BASE_DIR, `output/${presetName}/.errors`);
-	const glob = new Bun.Glob(`${source}_*.md`);
+	try {
+		const { access } = await import("node:fs/promises");
+		await access(errorDir);
+	} catch {
+		return; // Directory doesn't exist, nothing to clear
+	}
 
+	const glob = new Bun.Glob(`${source}_*.md`);
 	for await (const file of glob.scan({ cwd: errorDir })) {
 		try {
 			const { unlink } = await import("node:fs/promises");

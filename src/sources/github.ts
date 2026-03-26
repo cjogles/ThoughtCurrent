@@ -72,15 +72,15 @@ async function compileRepo(
 ): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 
-	// Fetch issues
+	// Fetch issues (all states, filtered by update time)
 	const issuesJson = await gh([
 		"api",
-		`/repos/${repo}/issues`,
+		`/repos/${repo}/issues?state=all&since=${filter.startDate}&per_page=100`,
 		"--paginate",
 		"-q",
 		".",
 		"--jq",
-		`.[] | select(.pull_request == null) | select(.created_at >= "${filter.startDate}" and .created_at <= "${filter.endDate}")`,
+		`.[] | select(.pull_request == null) | select(.updated_at <= "${filter.endDate}")`,
 	]);
 
 	if (issuesJson) {
@@ -155,15 +155,15 @@ async function compileRepo(
 		}
 	}
 
-	// Fetch PRs
+	// Fetch PRs (all states, filtered by update time)
 	const prsJson = await gh([
 		"api",
-		`/repos/${repo}/pulls`,
+		`/repos/${repo}/pulls?state=all&per_page=100`,
 		"--paginate",
 		"-q",
 		".",
 		"--jq",
-		`.[] | select(.created_at >= "${filter.startDate}" and .created_at <= "${filter.endDate}")`,
+		`.[] | select(.updated_at >= "${filter.startDate}" and .updated_at <= "${filter.endDate}")`,
 	]);
 
 	if (prsJson) {
