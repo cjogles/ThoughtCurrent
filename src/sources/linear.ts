@@ -70,7 +70,7 @@ interface IssuesResponse {
 }
 
 const ISSUES_QUERY = `
-query Issues($after: String, $startDate: DateTime!, $endDate: DateTime!) {
+query Issues($after: String, $startDate: DateTimeOrDuration!, $endDate: DateTimeOrDuration!) {
   issues(
     first: 50
     after: $after
