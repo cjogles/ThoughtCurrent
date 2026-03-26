@@ -210,7 +210,7 @@ async function processDocument(
 		title: doc.title || "Untitled Meeting",
 		content,
 		author: attendees.join(", ") || null,
-		sourceUrl: null,
+		sourceUrl: `https://app.granola.ai/docs/${doc.id}`,
 		timestamp: doc.created_at,
 		metadata: {
 			type: "transcript",
