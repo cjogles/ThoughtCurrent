@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "id": "d81fb4dc-3ec3-449a-b943-f5e17814778b",
+      "name": "messenger",
+      "createdAt": "2026-03-26T23:39:14.789Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-23T23:39:14.784Z",
+            "endDate": "2026-03-26T23:39:14.784Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "canvases",
+              "images",
+              "pins",
+              "bookmarks"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-03-23T23:39:14.784Z",
+          "endDate": "2026-03-26T23:39:14.784Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "linear",
+          "startDate": "2026-03-23T23:39:14.784Z",
+          "endDate": "2026-03-26T23:39:14.784Z"
+        },
+        {
+          "source": "sentry",
+          "startDate": "2026-03-23T23:39:14.784Z",
+          "endDate": "2026-03-26T23:39:14.784Z",
+          "projects": [
+            "mdl-frontend",
+            "mdl-backend"
+          ]
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-03-23T23:39:14.784Z",
+          "endDate": "2026-03-26T23:39:14.784Z",
+          "keywords": [
+            "MDL",
+            "messenger",
+            "M3",
+            "memorial",
+            "designer lab"
+          ]
+        },
+        {
+          "source": "huggingface",
+          "startDate": "2026-03-23T23:39:14.784Z",
+          "endDate": "2026-03-26T23:39:14.784Z",
+          "endpoints": [
+            "msgr-mio-ilx",
+            "msgr-mio-v2-oqq"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-03-23T23:39:14.784Z",
+            "endDate": "2026-03-26T23:39:14.784Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "tinymce",
+              "Jose",
+              "Oscar",
+              "Taryn"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
