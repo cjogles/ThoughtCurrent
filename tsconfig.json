@@ -6,11 +6,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["@types/bun"]
   },
-  "references": [
-    { "path": "packages/shared" },
-    { "path": "packages/server" },
-    { "path": "packages/web" }
-  ]
+  "include": ["src"]
 }

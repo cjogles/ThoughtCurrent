@@ -1,42 +1,5 @@
 {
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000"
-  },
   "permissions": {
     "dangerouslySkipPermissions": true
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /Users/jacksonogles/work/ThoughtCurrent/.claude/hooks/guard-readonly.sh"
-          }
-        ]
-      }
-    ],
-    "TeammateIdle": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /Users/jacksonogles/work/ThoughtCurrent/.claude/hooks/validate-compilation.sh"
-          }
-        ]
-      }
-    ],
-    "TaskCompleted": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /Users/jacksonogles/work/ThoughtCurrent/.claude/hooks/verify-task-output.sh"
-          }
-        ]
-      }
-    ]
   }
 }

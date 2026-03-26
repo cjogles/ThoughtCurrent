@@ -1,15 +1,25 @@
 {
   "name": "thoughtcurrent",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run --filter '*' dev",
-    "build": "bun run --filter '*' build",
-    "fix-and-check": "bun run --filter '*' fix-and-check",
+    "start": "bun run src/index.ts",
+    "fix-and-check": "biome check --write src/ && tsc --noEmit",
     "test": "bun test"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.28.0",
+    "fflate": "^0.8.2",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^2.4.5",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/bun": "^1.2.0",
+    "@types/pdf-parse": "^1.1.5",
+    "typescript": "^5.7.0"
+  }
 }

@@ -1,56 +1,88 @@
 # ThoughtCurrent
 
-ThoughtCurrent compiles text from multiple sources (GitHub, Slack, Linear, Granola, Sentry, Datadog, PostHog, Trello, Figma, local docs) into a single source of truth as local markdown files.
+ThoughtCurrent is an MCP server that compiles text from multiple sources (GitHub, Slack, Linear, Granola, Trello, Figma, Gmail) into local markdown files. It runs as a global Claude Code MCP tool, available in every project.
 
 ## Stack
 
 - Runtime: Bun (TypeScript)
-- Frontend: Vite + React + shadcn/ui
-- Backend: Hono on Bun
-- Agent execution: Claude Code Agent Teams
-- Output: Local markdown files (no database for v1)
+- Interface: MCP server (stdio transport)
+- Output: Local markdown files in `~/work/ThoughtCurrent/output/<preset>/`
 
 ## Project Structure
 
 ```
-packages/
-  server/     # Hono API server
-  web/        # Vite React SPA
-  shared/     # Shared TypeScript types
-prd/          # Product requirements
-output/       # Compilation output (gitignored)
+src/
+  index.ts          # MCP server entry point
+  compile.ts        # Compilation pipeline + async job system
+  cache.ts          # Per-preset cache management
+  presets.ts         # Preset CRUD
+  status.ts          # Source health checks
+  slack-meta.ts      # Slack channel/user listing
+  logger.ts          # Logging infrastructure
+  types.ts           # All TypeScript types
+  schemas.ts         # Zod validation schemas
+  lib/
+    extract.ts       # Text extraction (PDF, DOCX, XLSX, PPTX)
+    writer.ts        # Markdown output writers (per-source granular output)
+  sources/           # Source fetchers (read-only API clients)
+    slack.ts, github.ts, gmail.ts, linear.ts, granola.ts, trello.ts, figma.ts
+scripts/
+  auth-gmail.ts      # Standalone Gmail OAuth script
+  auth-trello.ts     # Standalone Trello OAuth script
+output/              # Compilation output (gitignored), namespaced by preset
+.meta/               # Global metadata (presets.json)
+.logs/               # MCP server logs
+.env                 # API tokens (centralized)
 ```
 
-## Safety Rules — ABSOLUTE, NON-NEGOTIABLE
+## MCP Tools
 
-ThoughtCurrent is a **read-only** tool. All agents MUST follow these rules:
+| Tool | Description |
+|------|-------------|
+| `compile` | Start async compilation for a preset (returns job ID) |
+| `check_compilation` | Poll compilation job status |
+| `check_status` | Health check all configured sources |
+| `list_presets` | List all saved presets |
+| `save_preset` | Create or update a preset |
+| `update_preset` | Update an existing preset |
+| `delete_preset` | Delete a preset |
+| `clear_output` | Clear output for a preset (optionally per-source) |
+| `list_slack_channels` | List Slack channels for preset config |
+| `list_slack_users` | List Slack users for preset config |
 
-1. **NEVER modify source systems** — no writing to Slack, GitHub, Linear, Sentry, Datadog, PostHog, Trello, Figma, or any external service
-2. **NEVER push code** — no `git push`, no `gh pr create`, no `gh issue create` unless explicitly triggered by user button click in the GUI
-3. **NEVER merge PRs** — `gh pr merge` is always blocked
-4. **NEVER delete files** outside the `output/` directory
-5. **ONLY read and write to `output/`** and project source files during development
-6. **All API calls are read-only** — GET requests only, no POST/PUT/PATCH/DELETE to external APIs (except MCP tool calls which are read-scoped)
+## Safety Rules
 
-## Code Quality
+ThoughtCurrent is a **read-only** data pipe:
 
-Use `pnpm run fix-and-check` for all code quality tasks. Do NOT run individual lint, format, or typecheck commands separately.
+1. **NEVER modify source systems** — all API calls are GET/read-only
+2. **NEVER overwrite .env** — always read first, append or edit individual lines
+3. **All source fetchers are read-scoped** — no POST/PUT/PATCH/DELETE to external APIs
 
 ## Compilation Output
 
-All compiled text goes to `output/` as markdown files. Each source gets its own directory. `_compiled.md` merges everything chronologically. `.meta/` stores compilation metadata, cache, and AI summaries.
+Output is namespaced by preset name:
+```
+output/
+  messenger-recent/
+    _compiled.md        # Chronological merge of all sources
+    slack/              # Granular Slack output (by-channel, by-user, by-date)
+    github/             # Issues and PRs
+    .meta/cache.json    # Per-preset dedup cache
+    .logs/              # Per-compilation debug logs (keeps last 10)
+    .errors/            # Persistent error reports (auto-clear on success)
+```
 
-## Agent Team Conventions
+## Code Quality
 
-- Compiler agents are teammates, not subagents
-- Each compiler agent handles one source
-- Agents communicate via SendMessage to team lead and each other
-- Monitor context window usage — respawn at ~80% with compacted output
-- Research agents (Phase 2) have WebSearch and WebFetch access
-- All agents read the output directory to orient themselves on fresh context
+Use `bun run fix-and-check` for all code quality tasks.
+
+## Authentication
+
+Tokens live in `~/work/ThoughtCurrent/.env`. For OAuth sources:
+- Gmail: `! bun run ~/work/ThoughtCurrent/scripts/auth-gmail.ts`
+- Trello: `! bun run ~/work/ThoughtCurrent/scripts/auth-trello.ts`
 
 ## Git
 
-- Never add Co-Authored-By lines to commits
 - Never force push
 - Never merge PRs — only the user merges
