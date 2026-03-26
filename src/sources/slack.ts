@@ -609,7 +609,7 @@ async function fetchFiles(
 	return items;
 }
 
-async function fetchPins(channelIds: string[]): Promise<CompilationItem[]> {
+async function fetchPins(channelIds: string[], workspace: string | null): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 
 	for (const channelId of channelIds) {
@@ -638,7 +638,7 @@ async function fetchPins(channelIds: string[]): Promise<CompilationItem[]> {
 					title: `Pinned in #${channelName}`,
 					content: pin.message.text,
 					author,
-					sourceUrl: null,
+					sourceUrl: buildSlackPermalink(workspace, channelId, pin.message.ts),
 					timestamp: new Date(pin.created * 1000).toISOString(),
 					metadata: {
 						type: "pin",
@@ -810,6 +810,7 @@ async function searchMessages(
 
 async function compileChannelBased(
 	config: SlackFilterConfig,
+	workspace: string | null,
 ): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 	const oldest = isoToSlackTs(config.startDate);
@@ -846,7 +847,7 @@ async function compileChannelBased(
 				title: `#${channel.name}`,
 				content: msg.text,
 				author,
-				sourceUrl: null,
+				sourceUrl: buildSlackPermalink(workspace, channel.id, msg.ts),
 				timestamp,
 				metadata: {
 					type: "message",
@@ -885,7 +886,7 @@ async function compileChannelBased(
 							title: `#${channel.name} (thread)`,
 							content: reply.text,
 							author: replyAuthor,
-							sourceUrl: null,
+							sourceUrl: buildSlackPermalink(workspace, channel.id, reply.ts, msg.ts),
 							timestamp: slackTsToIso(reply.ts),
 							metadata: {
 								type: "thread_reply",
@@ -905,6 +906,42 @@ async function compileChannelBased(
 	return items;
 }
 
+function buildSlackPermalink(
+	workspace: string | null,
+	channelId: string,
+	ts: string,
+	threadTs?: string,
+): string | null {
+	if (!workspace) return null;
+	const tsNoDot = ts.replace(".", "");
+	let url = `https://${workspace}.slack.com/archives/${channelId}/p${tsNoDot}`;
+	if (threadTs) {
+		const parentTsNoDot = threadTs.replace(".", "");
+		url = `https://${workspace}.slack.com/archives/${channelId}/p${parentTsNoDot}?thread_ts=${threadTs}&cid=${channelId}`;
+	}
+	return url;
+}
+
+// Module-level workspace domain cache
+let cachedWorkspace: string | null = null;
+
+async function getWorkspaceDomain(): Promise<string | null> {
+	if (cachedWorkspace) return cachedWorkspace;
+	try {
+		const token = getUserToken() ?? getBotToken();
+		if (!token) return null;
+		const data = await slackApi<{ url: string }>("auth.test", {}, token);
+		const match = data.url?.match(/https:\/\/([^.]+)\.slack\.com/);
+		if (match) {
+			cachedWorkspace = match[1];
+			return cachedWorkspace;
+		}
+	} catch {
+		// proceed without workspace domain
+	}
+	return null;
+}
+
 export async function compileSlack(
 	config: SlackFilterConfig,
 ): Promise<CompilationItem[]> {
@@ -914,6 +951,9 @@ export async function compileSlack(
 	const useSearch =
 		hasUserToken && config.searchQuery && config.searchQuery.trim().length > 0;
 
+	// Resolve workspace domain once for permalink construction
+	const workspace = await getWorkspaceDomain();
+
 	// Strategy A: search.messages when user token + searchQuery provided
 	// Strategy B: channel-based fetching otherwise
 	if (contentTypes.includes("messages")) {
@@ -921,7 +961,7 @@ export async function compileSlack(
 			const searchResults = await searchMessages(config);
 			items.push(...searchResults);
 		} else {
-			const channelResults = await compileChannelBased(config);
+			const channelResults = await compileChannelBased(config, workspace);
 			items.push(...channelResults);
 		}
 	}
@@ -939,7 +979,7 @@ export async function compileSlack(
 	if (contentTypes.includes("pins")) {
 		const channelIds =
 			config.channels ?? (await fetchChannels()).map((ch) => ch.id);
-		const pinItems = await fetchPins(channelIds);
+		const pinItems = await fetchPins(channelIds, workspace);
 		items.push(...pinItems);
 	}
 

@@ -1,6 +1,6 @@
 # ThoughtCurrent
 
-ThoughtCurrent is an MCP server that compiles text from multiple sources (GitHub, Slack, Linear, Granola, Trello, Figma, Gmail) into local markdown files. It runs as a global Claude Code MCP tool, available in every project.
+ThoughtCurrent is an MCP server that compiles text from multiple sources (GitHub, Slack, Linear, Granola, Trello, Figma, Gmail, Sentry, Datadog, Hugging Face) into local markdown files. It runs as a global Claude Code MCP tool, available in every project.
 
 ## Stack
 

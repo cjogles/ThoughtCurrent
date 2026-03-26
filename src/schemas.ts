@@ -7,7 +7,7 @@ export const sourceTypes = [
 	"granola",
 	"sentry",
 	"datadog",
-	"posthog",
+	"huggingface",
 	"trello",
 	"figma",
 	"gmail",
@@ -76,6 +76,9 @@ export const GenericSourceConfigSchema = z.object({
 	keywords: z.array(z.string()).optional(),
 	senders: z.array(z.string()).optional(),
 	repos: z.array(z.string()).optional(),
+	projects: z.array(z.string()).optional(),
+	query: z.string().optional(),
+	endpoints: z.array(z.string()).optional(),
 });
 
 export const SourceFilterConfigSchema = z.discriminatedUnion("source", [

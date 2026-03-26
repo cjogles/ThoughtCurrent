@@ -5,7 +5,7 @@ export type SourceType =
 	| "granola"
 	| "sentry"
 	| "datadog"
-	| "posthog"
+	| "huggingface"
 	| "trello"
 	| "figma"
 	| "gmail"
@@ -74,6 +74,9 @@ export interface GenericSourceConfig {
 	keywords?: string[];
 	senders?: string[];
 	repos?: string[];
+	projects?: string[];
+	query?: string;
+	endpoints?: string[];
 }
 
 export type SourceFilterConfig =
@@ -104,6 +107,9 @@ export interface SourceCompilationFilter {
 	keywords?: string[];
 	senders?: string[];
 	repos?: string[];
+	projects?: string[];
+	query?: string;
+	endpoints?: string[];
 }
 
 export interface FilterPreset {

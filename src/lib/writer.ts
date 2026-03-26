@@ -35,7 +35,7 @@ function getSourceFilename(source: SourceType): string {
 		granola: "transcripts.md",
 		sentry: "errors.md",
 		datadog: "logs.md",
-		posthog: "sessions.md",
+		huggingface: "endpoints.md",
 		trello: "cards.md",
 		figma: "comments.md",
 		gmail: "emails.md",

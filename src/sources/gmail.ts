@@ -389,7 +389,7 @@ export async function compileGmail(
 				title: subject,
 				content: contentBody,
 				author: from,
-				sourceUrl: null,
+				sourceUrl: `https://mail.google.com/mail/u/0/#inbox/${msg.id}`,
 				timestamp,
 				metadata: {
 					type: "email",

@@ -6,6 +6,9 @@ import { checkGranolaHealth } from "./sources/granola.js";
 import { checkLinearHealth } from "./sources/linear.js";
 import { checkSlackHealth } from "./sources/slack.js";
 import { checkTrelloHealth } from "./sources/trello.js";
+import { checkSentryHealth } from "./sources/sentry.js";
+import { checkDatadogHealth } from "./sources/datadog.js";
+import { checkHuggingFaceHealth } from "./sources/huggingface.js";
 
 const healthCheckers: Partial<
 	Record<SourceType, () => Promise<SourceHealthCheck>>
@@ -17,6 +20,9 @@ const healthCheckers: Partial<
 	linear: checkLinearHealth,
 	slack: checkSlackHealth,
 	trello: checkTrelloHealth,
+	sentry: checkSentryHealth,
+	datadog: checkDatadogHealth,
+	huggingface: checkHuggingFaceHealth,
 };
 
 export async function checkAllStatus(): Promise<SourceHealthCheck[]> {

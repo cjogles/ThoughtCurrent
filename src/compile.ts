@@ -26,6 +26,9 @@ import { compileGranola, compileGranolaWithConfig } from "./sources/granola.js";
 import { compileLinear } from "./sources/linear.js";
 import { compileSlack } from "./sources/slack.js";
 import { compileTrello } from "./sources/trello.js";
+import { compileSentry } from "./sources/sentry.js";
+import { compileDatadog } from "./sources/datadog.js";
+import { compileHuggingFace } from "./sources/huggingface.js";
 import {
 	CompilationLogger,
 	clearErrorReport,
@@ -62,6 +65,9 @@ const genericSourceFetchers: Record<
 	granola: compileGranola,
 	linear: compileLinear,
 	trello: compileTrello,
+	sentry: compileSentry,
+	datadog: compileDatadog,
+	huggingface: compileHuggingFace,
 };
 
 function genericConfigToLegacy(
@@ -74,6 +80,9 @@ function genericConfigToLegacy(
 		keywords: config.keywords,
 		senders: config.senders,
 		repos: config.repos,
+		projects: config.projects,
+		query: config.query,
+		endpoints: config.endpoints,
 	};
 }
 
