@@ -153,6 +153,8 @@ Presets are named filter configurations that define which sources to pull from, 
 
 Once a preset is configured, just talk naturally from any project. Claude compiles the data, reads the output, and answers with cross-tool context you'd normally have to tab between 7 apps to assemble.
 
+The key thing: **you never leave your project.** You just talk naturally and the MCP tools fire in the background. The compiled markdown becomes context Claude can read and reason over — connecting dots across Slack, GitHub, Linear, Sentry, etc. that would normally require you to tab between 7 different apps.
+
 **Morning catch-up:**
 ```
 "Compile my-project and catch me up"
