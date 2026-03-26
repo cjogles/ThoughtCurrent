@@ -1,15 +1,6 @@
 import { rm } from "node:fs/promises";
-import { resolve } from "node:path";
 import { homedir } from "node:os";
-import type {
-	CompilationItem,
-	CompilationMeta,
-	CompilationProgress,
-	FilterPreset,
-	GenericSourceConfig,
-	SourceCompilationFilter,
-	SourceType,
-} from "./types.js";
+import { resolve } from "node:path";
 import { readCache, writeCache } from "./cache.js";
 import {
 	writeCompiledMarkdown,
@@ -19,23 +10,32 @@ import {
 	writeSlackGranularOutput,
 	writeSourceMarkdown,
 } from "./lib/writer.js";
+import {
+	CompilationLogger,
+	clearErrorReport,
+	logMcp,
+	rotateCompilationLogs,
+	writeErrorReport,
+} from "./logger.js";
+import { compileDatadog } from "./sources/datadog.js";
 import { compileFigma } from "./sources/figma.js";
 import { compileGitHub } from "./sources/github.js";
 import { compileGmail } from "./sources/gmail.js";
 import { compileGranola, compileGranolaWithConfig } from "./sources/granola.js";
+import { compileHuggingFace } from "./sources/huggingface.js";
 import { compileLinear } from "./sources/linear.js";
+import { compileSentry } from "./sources/sentry.js";
 import { compileSlack } from "./sources/slack.js";
 import { compileTrello } from "./sources/trello.js";
-import { compileSentry } from "./sources/sentry.js";
-import { compileDatadog } from "./sources/datadog.js";
-import { compileHuggingFace } from "./sources/huggingface.js";
-import {
-	CompilationLogger,
-	clearErrorReport,
-	writeErrorReport,
-	rotateCompilationLogs,
-	logMcp,
-} from "./logger.js";
+import type {
+	CompilationItem,
+	CompilationMeta,
+	CompilationProgress,
+	FilterPreset,
+	GenericSourceConfig,
+	SourceCompilationFilter,
+	SourceType,
+} from "./types.js";
 
 const BASE_DIR = resolve(homedir(), "work/ThoughtCurrent");
 
@@ -124,15 +124,23 @@ export function startCompilation(preset: FilterPreset): string {
 	return jobId;
 }
 
-async function runCompilation(job: CompilationJob, preset: FilterPreset): Promise<void> {
+async function runCompilation(
+	job: CompilationJob,
+	preset: FilterPreset,
+): Promise<void> {
 	const logger = new CompilationLogger(preset.name, job.id);
 	const outputDir = job.outputPath;
 	const allItems: CompilationItem[] = [];
 
-	await logger.log("info", "compile", `Starting compilation for preset "${preset.name}"`, {
-		sourceCount: preset.sourceConfigs.length,
-		sources: preset.sourceConfigs.map((s) => s.source),
-	});
+	await logger.log(
+		"info",
+		"compile",
+		`Starting compilation for preset "${preset.name}"`,
+		{
+			sourceCount: preset.sourceConfigs.length,
+			sources: preset.sourceConfigs.map((s) => s.source),
+		},
+	);
 
 	const cache = await readCache(preset.name);
 
@@ -267,9 +275,14 @@ async function runCompilation(job: CompilationJob, preset: FilterPreset): Promis
 		),
 	};
 
-	await logger.log("info", "compile", `Compilation complete: ${allItems.length} total items`, {
-		sourceCounts: job.meta.sourceCounts,
-	});
+	await logger.log(
+		"info",
+		"compile",
+		`Compilation complete: ${allItems.length} total items`,
+		{
+			sourceCounts: job.meta.sourceCounts,
+		},
+	);
 
 	// Rotate old logs
 	await rotateCompilationLogs(preset.name);
@@ -278,7 +291,11 @@ async function runCompilation(job: CompilationJob, preset: FilterPreset): Promis
 function getSuggestedFix(source: string, error: string): string {
 	const lower = error.toLowerCase();
 
-	if (lower.includes("token") || lower.includes("unauthorized") || lower.includes("401")) {
+	if (
+		lower.includes("token") ||
+		lower.includes("unauthorized") ||
+		lower.includes("401")
+	) {
 		return `Authentication issue. Re-run the auth script: \`! bun run ~/work/ThoughtCurrent/scripts/auth-${source}.ts\` or check your token in ~/work/ThoughtCurrent/.env`;
 	}
 	if (lower.includes("rate limit") || lower.includes("429")) {
@@ -294,7 +311,10 @@ function getSuggestedFix(source: string, error: string): string {
 	return `Check the error details above and verify your ${source} configuration.`;
 }
 
-export async function clearPresetOutput(presetName: string, source?: string): Promise<void> {
+export async function clearPresetOutput(
+	presetName: string,
+	source?: string,
+): Promise<void> {
 	const outputDir = getOutputDir(presetName);
 
 	if (source) {
@@ -304,11 +324,16 @@ export async function clearPresetOutput(presetName: string, source?: string): Pr
 		// Clear all output for this preset (except .meta for cache/presets)
 		const glob = new Bun.Glob("*");
 		for await (const entry of glob.scan({ cwd: outputDir, onlyFiles: false })) {
-			if (entry === ".meta" || entry === ".logs" || entry === ".errors") continue;
+			if (entry === ".meta" || entry === ".logs" || entry === ".errors")
+				continue;
 			await rm(resolve(outputDir, entry), { recursive: true, force: true });
 		}
 
 		// Reset the cache for this preset
-		await writeCache(presetName, { version: 1, lastCompilation: null, sources: {} });
+		await writeCache(presetName, {
+			version: 1,
+			lastCompilation: null,
+			sources: {},
+		});
 	}
 }

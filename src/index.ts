@@ -1,18 +1,21 @@
-import { resolve } from "node:path";
 import { homedir } from "node:os";
+import { resolve } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-import { startCompilation, getJob, clearPresetOutput } from "./compile.js";
-import { checkAllStatus } from "./status.js";
-import { readPresets, getPresetByName, savePreset, deletePreset } from "./presets.js";
-import { listSlackChannels, listSlackUsers } from "./slack-meta.js";
+import { clearPresetOutput, getJob, startCompilation } from "./compile.js";
 import { logMcp } from "./logger.js";
-import type { SourceFilterConfig } from "./types.js";
 import {
-	SourceFilterConfigSchema,
-} from "./schemas.js";
+	deletePreset,
+	getPresetByName,
+	readPresets,
+	savePreset,
+} from "./presets.js";
+import { SourceFilterConfigSchema } from "./schemas.js";
+import { listSlackChannels, listSlackUsers } from "./slack-meta.js";
+import { checkAllStatus } from "./status.js";
+import type { SourceFilterConfig } from "./types.js";
 
 // Load .env from the centralized location
 const ENV_PATH = resolve(homedir(), "work/ThoughtCurrent/.env");
@@ -54,22 +57,34 @@ server.tool(
 			const allPresets = await readPresets();
 			const names = allPresets.presets.map((p) => p.name).join(", ");
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Preset "${preset}" not found. Available presets: ${names || "(none)"}`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Preset "${preset}" not found. Available presets: ${names || "(none)"}`,
+					},
+				],
 				isError: true,
 			};
 		}
 
-		await logMcp("info", "tool:compile", `Starting compilation for preset "${preset}"`);
+		await logMcp(
+			"info",
+			"tool:compile",
+			`Starting compilation for preset "${preset}"`,
+		);
 		const jobId = startCompilation(presetData);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({ jobId, status: "running", preset: presetData.name }, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(
+						{ jobId, status: "running", preset: presetData.name },
+						null,
+						2,
+					),
+				},
+			],
 		};
 	},
 );
@@ -83,35 +98,49 @@ server.tool(
 		const job = getJob(jobId);
 		if (!job) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Job "${jobId}" not found. It may have expired.`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Job "${jobId}" not found. It may have expired.`,
+					},
+				],
 				isError: true,
 			};
 		}
 
-		const completed = job.progress.filter((p) => p.status === "done").map((p) => p.source);
-		const failed = job.progress.filter((p) => p.status === "error").map((p) => ({
-			source: p.source,
-			error: p.message,
-		}));
-		const pending = job.progress.filter((p) => p.status === "fetching").map((p) => p.source);
+		const completed = job.progress
+			.filter((p) => p.status === "done")
+			.map((p) => p.source);
+		const failed = job.progress
+			.filter((p) => p.status === "error")
+			.map((p) => ({
+				source: p.source,
+				error: p.message,
+			}));
+		const pending = job.progress
+			.filter((p) => p.status === "fetching")
+			.map((p) => p.source);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({
-					status: job.status,
-					completed,
-					failed,
-					pending,
-					totalItems: job.totalItems,
-					outputPath: job.outputPath,
-					startedAt: job.startedAt,
-					completedAt: job.completedAt,
-				}, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(
+						{
+							status: job.status,
+							completed,
+							failed,
+							pending,
+							totalItems: job.totalItems,
+							outputPath: job.outputPath,
+							startedAt: job.startedAt,
+							completedAt: job.completedAt,
+						},
+						null,
+						2,
+					),
+				},
+			],
 		};
 	},
 );
@@ -126,10 +155,12 @@ server.tool(
 		const results = await checkAllStatus();
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({ integrations: results }, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify({ integrations: results }, null, 2),
+				},
+			],
 		};
 	},
 );
@@ -143,10 +174,12 @@ server.tool(
 		const data = await readPresets();
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify(data, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(data, null, 2),
+				},
+			],
 		};
 	},
 );
@@ -157,7 +190,9 @@ server.tool(
 	"Create or update a named compilation preset with source configurations.",
 	{
 		name: z.string().describe("Preset name (e.g., 'messenger-recent')"),
-		sourceConfigs: z.string().describe("JSON string of SourceFilterConfig[] array"),
+		sourceConfigs: z
+			.string()
+			.describe("JSON string of SourceFilterConfig[] array"),
 	},
 	async ({ name, sourceConfigs: sourceConfigsStr }) => {
 		let parsed: SourceFilterConfig[];
@@ -167,10 +202,12 @@ server.tool(
 			z.array(SourceFilterConfigSchema).parse(parsed);
 		} catch (err) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Invalid sourceConfigs: ${err instanceof Error ? err.message : String(err)}`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Invalid sourceConfigs: ${err instanceof Error ? err.message : String(err)}`,
+					},
+				],
 				isError: true,
 			};
 		}
@@ -181,10 +218,12 @@ server.tool(
 		const preset = await savePreset(name, parsed);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({ saved: true, preset }, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify({ saved: true, preset }, null, 2),
+				},
+			],
 		};
 	},
 );
@@ -195,16 +234,20 @@ server.tool(
 	"Update an existing preset's source configurations.",
 	{
 		name: z.string().describe("Name of the preset to update"),
-		sourceConfigs: z.string().describe("JSON string of updated SourceFilterConfig[] array"),
+		sourceConfigs: z
+			.string()
+			.describe("JSON string of updated SourceFilterConfig[] array"),
 	},
 	async ({ name, sourceConfigs: sourceConfigsStr }) => {
 		const existing = await getPresetByName(name);
 		if (!existing) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Preset "${name}" not found.`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Preset "${name}" not found.`,
+					},
+				],
 				isError: true,
 			};
 		}
@@ -215,10 +258,12 @@ server.tool(
 			z.array(SourceFilterConfigSchema).parse(parsed);
 		} catch (err) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Invalid sourceConfigs: ${err instanceof Error ? err.message : String(err)}`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Invalid sourceConfigs: ${err instanceof Error ? err.message : String(err)}`,
+					},
+				],
 				isError: true,
 			};
 		}
@@ -227,10 +272,12 @@ server.tool(
 		const preset = await savePreset(name, parsed);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({ updated: true, preset }, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify({ updated: true, preset }, null, 2),
+				},
+			],
 		};
 	},
 );
@@ -244,10 +291,12 @@ server.tool(
 		const deleted = await deletePreset(name);
 		if (!deleted) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Preset "${name}" not found.`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Preset "${name}" not found.`,
+					},
+				],
 				isError: true,
 			};
 		}
@@ -255,10 +304,12 @@ server.tool(
 		await logMcp("info", "tool:delete_preset", `Deleted preset "${name}"`);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({ deleted: true, name }, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify({ deleted: true, name }, null, 2),
+				},
+			],
 		};
 	},
 );
@@ -269,32 +320,48 @@ server.tool(
 	"Clear compiled output for a preset. Optionally clear only a specific source.",
 	{
 		preset: z.string().describe("Name of the preset whose output to clear"),
-		source: z.string().optional().describe("Optional: specific source to clear (e.g., 'slack', 'github')"),
+		source: z
+			.string()
+			.optional()
+			.describe("Optional: specific source to clear (e.g., 'slack', 'github')"),
 	},
 	async ({ preset, source }) => {
 		const presetData = await getPresetByName(preset);
 		if (!presetData) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Preset "${preset}" not found.`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Preset "${preset}" not found.`,
+					},
+				],
 				isError: true,
 			};
 		}
 
-		await logMcp("info", "tool:clear_output", `Clearing output for "${preset}"`, { source });
+		await logMcp(
+			"info",
+			"tool:clear_output",
+			`Clearing output for "${preset}"`,
+			{ source },
+		);
 		await clearPresetOutput(preset, source);
 
 		return {
-			content: [{
-				type: "text" as const,
-				text: JSON.stringify({
-					cleared: true,
-					preset,
-					source: source ?? "all",
-				}, null, 2),
-			}],
+			content: [
+				{
+					type: "text" as const,
+					text: JSON.stringify(
+						{
+							cleared: true,
+							preset,
+							source: source ?? "all",
+						},
+						null,
+						2,
+					),
+				},
+			],
 		};
 	},
 );
@@ -308,17 +375,21 @@ server.tool(
 		try {
 			const channels = await listSlackChannels();
 			return {
-				content: [{
-					type: "text" as const,
-					text: JSON.stringify({ channels }, null, 2),
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify({ channels }, null, 2),
+					},
+				],
 			};
 		} catch (err) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Error: ${err instanceof Error ? err.message : String(err)}`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Error: ${err instanceof Error ? err.message : String(err)}`,
+					},
+				],
 				isError: true,
 			};
 		}
@@ -334,17 +405,21 @@ server.tool(
 		try {
 			const users = await listSlackUsers();
 			return {
-				content: [{
-					type: "text" as const,
-					text: JSON.stringify({ users }, null, 2),
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: JSON.stringify({ users }, null, 2),
+					},
+				],
 			};
 		} catch (err) {
 			return {
-				content: [{
-					type: "text" as const,
-					text: `Error: ${err instanceof Error ? err.message : String(err)}`,
-				}],
+				content: [
+					{
+						type: "text" as const,
+						text: `Error: ${err instanceof Error ? err.message : String(err)}`,
+					},
+				],
 				isError: true,
 			};
 		}

@@ -143,9 +143,7 @@ export async function compileHuggingFace(
 		}
 
 		const timestamp =
-			ep.status.updatedAt ??
-			ep.status.createdAt ??
-			new Date().toISOString();
+			ep.status.updatedAt ?? ep.status.createdAt ?? new Date().toISOString();
 
 		items.push({
 			source: "huggingface",

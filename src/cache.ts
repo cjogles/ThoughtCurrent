@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs/promises";
-import { resolve } from "node:path";
 import { homedir } from "node:os";
+import { resolve } from "node:path";
 import type { CacheData } from "./types.js";
 
 const BASE_DIR = resolve(homedir(), "work/ThoughtCurrent");
@@ -18,7 +18,10 @@ export async function readCache(presetName: string): Promise<CacheData> {
 	}
 }
 
-export async function writeCache(presetName: string, cache: CacheData): Promise<void> {
+export async function writeCache(
+	presetName: string,
+	cache: CacheData,
+): Promise<void> {
 	const cachePath = getCachePath(presetName);
 	await mkdir(resolve(cachePath, ".."), { recursive: true });
 	await Bun.write(cachePath, `${JSON.stringify(cache, null, 2)}\n`);

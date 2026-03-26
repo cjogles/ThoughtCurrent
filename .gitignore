@@ -19,3 +19,6 @@ output/
 
 # Bun
 bun.lockb
+
+# gstack (security reports, local analytics)
+.gstack/

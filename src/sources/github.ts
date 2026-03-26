@@ -210,7 +210,7 @@ export async function compileGitHub(
 	const repos = filter.repos;
 	if (!repos || repos.length === 0) {
 		throw new Error(
-			"No repos configured. Add repos to your preset's GitHub source config (e.g. [\"org/repo\"])",
+			'No repos configured. Add repos to your preset\'s GitHub source config (e.g. ["org/repo"])',
 		);
 	}
 

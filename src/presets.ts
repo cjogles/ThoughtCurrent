@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs/promises";
-import { resolve } from "node:path";
 import { homedir } from "node:os";
+import { resolve } from "node:path";
 import type { FilterPreset, PresetsData } from "./types.js";
 
 const BASE_DIR = resolve(homedir(), "work/ThoughtCurrent");
@@ -23,19 +23,27 @@ export async function writePresets(data: PresetsData): Promise<void> {
 	await Bun.write(PRESETS_FILE, `${JSON.stringify(data, null, 2)}\n`);
 }
 
-export async function getPresetByName(name: string): Promise<FilterPreset | null> {
+export async function getPresetByName(
+	name: string,
+): Promise<FilterPreset | null> {
 	const data = await readPresets();
 	return data.presets.find((p) => p.name === name) ?? null;
 }
 
-export async function savePreset(name: string, sourceConfigs: FilterPreset["sourceConfigs"]): Promise<FilterPreset> {
+export async function savePreset(
+	name: string,
+	sourceConfigs: FilterPreset["sourceConfigs"],
+): Promise<FilterPreset> {
 	const data = await readPresets();
 
 	const existing = data.presets.findIndex((p) => p.name === name);
 	const preset: FilterPreset = {
 		id: existing >= 0 ? data.presets[existing].id : crypto.randomUUID(),
 		name,
-		createdAt: existing >= 0 ? data.presets[existing].createdAt : new Date().toISOString(),
+		createdAt:
+			existing >= 0
+				? data.presets[existing].createdAt
+				: new Date().toISOString(),
 		sourceConfigs,
 	};
 

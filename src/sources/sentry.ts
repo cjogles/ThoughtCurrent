@@ -77,10 +77,7 @@ function parseLinkHeader(header: string | null): string | null {
 	// <url>; rel="next"; results="true"; cursor="..."
 	const parts = header.split(",");
 	for (const part of parts) {
-		if (
-			part.includes('rel="next"') &&
-			part.includes('results="true"')
-		) {
+		if (part.includes('rel="next"') && part.includes('results="true"')) {
 			const cursorMatch = part.match(/cursor="([^"]+)"/);
 			if (cursorMatch) return cursorMatch[1];
 		}
@@ -187,7 +184,9 @@ async function fetchIssuesWithPagination(
 		const params: string = cursor
 			? `${baseParams}&cursor=${cursor}`
 			: baseParams;
-		const result: PaginationResult<SentryIssue[]> = await sentryGet<SentryIssue[]>(path, params);
+		const result: PaginationResult<SentryIssue[]> = await sentryGet<
+			SentryIssue[]
+		>(path, params);
 		allIssues.push(...result.data);
 		cursor = result.nextCursor;
 	} while (cursor);
@@ -282,9 +281,7 @@ export async function checkSentryHealth(): Promise<SourceHealthCheck> {
 
 	try {
 		const org = getOrg();
-		const { data } = await sentryGet<SentryOrg>(
-			`/organizations/${org}/`,
-		);
+		const { data } = await sentryGet<SentryOrg>(`/organizations/${org}/`);
 
 		const result: SourceHealthCheck = {
 			source: "sentry",

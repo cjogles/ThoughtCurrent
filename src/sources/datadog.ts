@@ -37,7 +37,9 @@ async function datadogPost<T>(
 	});
 
 	if (!res.ok) {
-		throw new Error(`Datadog API ${path} HTTP ${res.status}: ${res.statusText}`);
+		throw new Error(
+			`Datadog API ${path} HTTP ${res.status}: ${res.statusText}`,
+		);
 	}
 
 	return res.json() as Promise<T>;
@@ -54,7 +56,9 @@ async function datadogGet<T>(path: string): Promise<T> {
 	});
 
 	if (!res.ok) {
-		throw new Error(`Datadog API ${path} HTTP ${res.status}: ${res.statusText}`);
+		throw new Error(
+			`Datadog API ${path} HTTP ${res.status}: ${res.statusText}`,
+		);
 	}
 
 	return res.json() as Promise<T>;

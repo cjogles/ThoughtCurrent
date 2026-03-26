@@ -1,14 +1,14 @@
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
+import {
+	extractTextFromBuffer,
+	extractVideoScreenshots,
+} from "../lib/extract.js";
 import type {
 	CompilationItem,
 	SlackFilterConfig,
 	SourceHealthCheck,
 } from "../types.js";
-import {
-	extractTextFromBuffer,
-	extractVideoScreenshots,
-} from "../lib/extract.js";
 
 const OUTPUT_DIR = resolve(import.meta.dir, "../../../../output");
 
@@ -609,7 +609,10 @@ async function fetchFiles(
 	return items;
 }
 
-async function fetchPins(channelIds: string[], workspace: string | null): Promise<CompilationItem[]> {
+async function fetchPins(
+	channelIds: string[],
+	workspace: string | null,
+): Promise<CompilationItem[]> {
 	const items: CompilationItem[] = [];
 
 	for (const channelId of channelIds) {
@@ -886,7 +889,12 @@ async function compileChannelBased(
 							title: `#${channel.name} (thread)`,
 							content: reply.text,
 							author: replyAuthor,
-							sourceUrl: buildSlackPermalink(workspace, channel.id, reply.ts, msg.ts),
+							sourceUrl: buildSlackPermalink(
+								workspace,
+								channel.id,
+								reply.ts,
+								msg.ts,
+							),
 							timestamp: slackTsToIso(reply.ts),
 							metadata: {
 								type: "thread_reply",

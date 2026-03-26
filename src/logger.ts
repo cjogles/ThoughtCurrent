@@ -1,6 +1,6 @@
 import { appendFile, mkdir } from "node:fs/promises";
-import { resolve } from "node:path";
 import { homedir } from "node:os";
+import { resolve } from "node:path";
 
 const BASE_DIR = resolve(homedir(), "work/ThoughtCurrent");
 const MCP_LOG = resolve(BASE_DIR, ".logs/mcp.log");
@@ -24,8 +24,15 @@ function formatTimestamp(): string {
 	return new Date().toISOString();
 }
 
-function formatMessage(level: LogLevel, component: string, message: string, data?: Record<string, unknown>): string {
-	const parts = [`[${formatTimestamp()}] [${level.toUpperCase()}] [${component}] ${message}`];
+function formatMessage(
+	level: LogLevel,
+	component: string,
+	message: string,
+	data?: Record<string, unknown>,
+): string {
+	const parts = [
+		`[${formatTimestamp()}] [${level.toUpperCase()}] [${component}] ${message}`,
+	];
 	if (data) {
 		parts.push(` ${JSON.stringify(data)}`);
 	}
@@ -37,7 +44,12 @@ async function writeToFile(filePath: string, message: string): Promise<void> {
 	await appendFile(filePath, message);
 }
 
-export async function logMcp(level: LogLevel, component: string, message: string, data?: Record<string, unknown>): Promise<void> {
+export async function logMcp(
+	level: LogLevel,
+	component: string,
+	message: string,
+	data?: Record<string, unknown>,
+): Promise<void> {
 	if (LOG_LEVELS[level] < LOG_LEVELS[minLevel]) return;
 	const formatted = formatMessage(level, component, message, data);
 	await writeToFile(MCP_LOG, formatted);
@@ -51,13 +63,23 @@ export class CompilationLogger {
 		this.logFile = resolve(BASE_DIR, `output/${presetName}/.logs/${jobId}.log`);
 	}
 
-	async log(level: LogLevel, component: string, message: string, data?: Record<string, unknown>): Promise<void> {
+	async log(
+		level: LogLevel,
+		component: string,
+		message: string,
+		data?: Record<string, unknown>,
+	): Promise<void> {
 		const formatted = formatMessage(level, component, message, data);
 		this.lines.push(formatted);
 		await writeToFile(this.logFile, formatted);
 	}
 
-	async apiCall(source: string, url: string, status: number, durationMs: number): Promise<void> {
+	async apiCall(
+		source: string,
+		url: string,
+		status: number,
+		durationMs: number,
+	): Promise<void> {
 		await this.log("debug", source, `API ${status} ${url}`, { durationMs });
 	}
 
@@ -73,8 +95,14 @@ export class CompilationLogger {
 		await this.log("info", source, `Starting fetch`);
 	}
 
-	async sourceComplete(source: string, itemCount: number, durationMs: number): Promise<void> {
-		await this.log("info", source, `Completed: ${itemCount} items`, { durationMs });
+	async sourceComplete(
+		source: string,
+		itemCount: number,
+		durationMs: number,
+	): Promise<void> {
+		await this.log("info", source, `Completed: ${itemCount} items`, {
+			durationMs,
+		});
 	}
 
 	async sourceError(source: string, error: string): Promise<void> {
@@ -119,7 +147,10 @@ export async function writeErrorReport(
 	await writeToFile(errorFile, content);
 }
 
-export async function clearErrorReport(presetName: string, source: string): Promise<void> {
+export async function clearErrorReport(
+	presetName: string,
+	source: string,
+): Promise<void> {
 	const errorDir = resolve(BASE_DIR, `output/${presetName}/.errors`);
 	const glob = new Bun.Glob(`${source}_*.md`);
 
@@ -133,7 +164,10 @@ export async function clearErrorReport(presetName: string, source: string): Prom
 	}
 }
 
-export async function rotateCompilationLogs(presetName: string, keepCount = 10): Promise<void> {
+export async function rotateCompilationLogs(
+	presetName: string,
+	keepCount = 10,
+): Promise<void> {
 	const logsDir = resolve(BASE_DIR, `output/${presetName}/.logs`);
 
 	try {

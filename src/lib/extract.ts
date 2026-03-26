@@ -2,10 +2,10 @@ import { execFile } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 import { promisify } from "node:util";
+import ExcelJS from "exceljs";
 import { unzipSync } from "fflate";
 import mammoth from "mammoth";
 import { PDFParse } from "pdf-parse";
-import * as XLSX from "xlsx";
 
 const execFileAsync = promisify(execFile);
 
@@ -243,13 +243,23 @@ export async function extractTextFromBuffer(
 			mimetype === "application/vnd.ms-excel" ||
 			mimetype === "text/csv"
 		) {
-			const workbook = XLSX.read(buffer, { type: "buffer" });
+			const workbook = new ExcelJS.Workbook();
+			await workbook.xlsx.load(new Uint8Array(buffer).buffer as ArrayBuffer);
 			const lines: string[] = [];
-			for (const sheetName of workbook.SheetNames) {
-				lines.push(`## Sheet: ${sheetName}`);
-				const sheet = workbook.Sheets[sheetName];
-				const csv = XLSX.utils.sheet_to_csv(sheet);
-				lines.push(csv);
+			for (const sheet of workbook.worksheets) {
+				lines.push(`## Sheet: ${sheet.name}`);
+				const rows: string[] = [];
+				sheet.eachRow((row) => {
+					const values = row.values as (string | number | null | undefined)[];
+					// ExcelJS row.values is 1-indexed (index 0 is undefined)
+					rows.push(
+						values
+							.slice(1)
+							.map((v) => v ?? "")
+							.join(","),
+					);
+				});
+				lines.push(rows.join("\n"));
 				lines.push("");
 			}
 			return lines.join("\n").trim() || null;

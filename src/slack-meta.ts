@@ -1,10 +1,10 @@
-import type { SlackChannelMeta, SlackUserMeta } from "./types.js";
 import {
 	getBotToken,
 	getUserToken,
 	resolveUser,
 	slackApi,
 } from "./sources/slack.js";
+import type { SlackChannelMeta, SlackUserMeta } from "./types.js";
 
 // In-memory caches with 5-minute TTL
 let channelCache: { data: SlackChannelMeta[]; expiresAt: number } | null = null;

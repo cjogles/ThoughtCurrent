@@ -1,14 +1,14 @@
-import type { SourceHealthCheck, SourceType } from "./types.js";
+import { checkDatadogHealth } from "./sources/datadog.js";
 import { checkFigmaHealth } from "./sources/figma.js";
 import { checkGitHubHealth } from "./sources/github.js";
 import { checkGmailHealth } from "./sources/gmail.js";
 import { checkGranolaHealth } from "./sources/granola.js";
+import { checkHuggingFaceHealth } from "./sources/huggingface.js";
 import { checkLinearHealth } from "./sources/linear.js";
+import { checkSentryHealth } from "./sources/sentry.js";
 import { checkSlackHealth } from "./sources/slack.js";
 import { checkTrelloHealth } from "./sources/trello.js";
-import { checkSentryHealth } from "./sources/sentry.js";
-import { checkDatadogHealth } from "./sources/datadog.js";
-import { checkHuggingFaceHealth } from "./sources/huggingface.js";
+import type { SourceHealthCheck, SourceType } from "./types.js";
 
 const healthCheckers: Partial<
 	Record<SourceType, () => Promise<SourceHealthCheck>>
