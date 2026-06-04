@@ -7,8 +7,18 @@ import type {
 const SENTRY_API = "https://sentry.io/api/0";
 
 function getAuthToken(): string {
-	const token = process.env.SENTRY_AUTH_TOKEN;
-	if (!token) throw new Error("SENTRY_AUTH_TOKEN not set");
+	// Prefer the personal user auth token: the org/internal SENTRY_AUTH_TOKEN
+	// lost access to the hq-en org and now 403s on every request. The user
+	// token (the same identity TC already uses for Slack/Gmail/Linear/Granola)
+	// carries the org:read + event:read scopes these endpoints need. Fall back
+	// to the org token so existing setups that only define it keep working.
+	const token =
+		process.env.SENTRY_USER_AUTH_TOKEN ?? process.env.SENTRY_AUTH_TOKEN;
+	if (!token) {
+		throw new Error(
+			"Neither SENTRY_USER_AUTH_TOKEN nor SENTRY_AUTH_TOKEN is set",
+		);
+	}
 	return token;
 }
 
