@@ -13,6 +13,7 @@ import {
 	savePreset,
 } from "./presets.js";
 import { SourceFilterConfigSchema } from "./schemas.js";
+import { searchDms } from "./slack-dm.js";
 import { listSlackChannels, listSlackUsers } from "./slack-meta.js";
 import { checkAllStatus } from "./status.js";
 import type { SourceFilterConfig } from "./types.js";
@@ -410,6 +411,80 @@ server.tool(
 						type: "text" as const,
 						text: JSON.stringify({ users }, null, 2),
 					},
+				],
+			};
+		} catch (err) {
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: `Error: ${err instanceof Error ? err.message : String(err)}`,
+					},
+				],
+				isError: true,
+			};
+		}
+	},
+);
+
+// --- Tool: search_dms ---
+server.tool(
+	"search_dms",
+	"Search your Slack direct messages — both 1:1 DMs and group DMs (mpim). THIS IS THE WAY to read DMs — the compile/preset path and list_slack_channels use the bot token and CANNOT see your personal DMs; this tool uses your user token (im:history/mpim:history). For a 1:1 DM pass `person`; for a group DM pass `people` with 2+ members (it finds the group containing exactly you + them). Each identifier may be a Slack user ID (U0688…), @handle, full name, or email. Optionally filter by keywords + date range. Returns the actual messages from all participants, chronologically. Omit `query` to pull the whole thread. If no such DM exists it says so; an ambiguous group returns candidate channels.",
+	{
+		person: z
+			.string()
+			.optional()
+			.describe(
+				"For a 1:1 DM: Slack user ID (U…), @handle, full name, or email. Ambiguous names return the candidate list so you can retry with an exact handle/ID. Use `people` instead for group DMs.",
+			),
+		people: z
+			.array(z.string())
+			.optional()
+			.describe(
+				"For a GROUP DM: 2+ identifiers (IDs/@handles/names/emails) of the OTHER participants (you are implicit). Returns the group DM whose members are exactly you + these people. A single entry behaves like `person`.",
+			),
+		query: z
+			.string()
+			.optional()
+			.describe(
+				"Optional space-separated keywords; only messages containing ALL terms are returned (case-insensitive). Omit to get the entire DM thread.",
+			),
+		startDate: z
+			.string()
+			.optional()
+			.describe("Optional ISO date/datetime lower bound (e.g. 2025-01-01)."),
+		endDate: z
+			.string()
+			.optional()
+			.describe("Optional ISO date/datetime upper bound (e.g. 2026-06-27)."),
+		limit: z
+			.number()
+			.optional()
+			.describe("Max messages to return (default 500, max 2000)."),
+	},
+	async ({ person, people, query, startDate, endDate, limit }) => {
+		try {
+			await logMcp(
+				"info",
+				"tool:search_dms",
+				`Searching DMs with "${people?.join(", ") ?? person}"`,
+				{
+					hasQuery: !!query,
+					group: !!people && people.length > 1,
+				},
+			);
+			const result = await searchDms({
+				person,
+				people,
+				query,
+				startDate,
+				endDate,
+				limit,
+			});
+			return {
+				content: [
+					{ type: "text" as const, text: JSON.stringify(result, null, 2) },
 				],
 			};
 		} catch (err) {

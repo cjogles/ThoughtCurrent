@@ -4,11 +4,16 @@ import {
 	extractTextFromBuffer,
 	extractVideoScreenshots,
 } from "../lib/extract.js";
+import { logMcp } from "../logger.js";
 import type {
 	CompilationItem,
 	SlackFilterConfig,
 	SourceHealthCheck,
 } from "../types.js";
+
+async function slackLog(message: string): Promise<void> {
+	await logMcp("info", "slack", message);
+}
 
 const OUTPUT_DIR = resolve(import.meta.dir, "../../../../output");
 
@@ -90,6 +95,7 @@ export async function slackApi<T>(
 	for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
 		const res = await fetch(url.toString(), {
 			headers: { Authorization: `Bearer ${token}` },
+			signal: AbortSignal.timeout(30000),
 		});
 
 		if (res.status === 429) {
@@ -404,7 +410,7 @@ async function fetchFileTranscript(fileId: string): Promise<string | null> {
 	}
 }
 
-function slackTsToIso(ts: string): string {
+export function slackTsToIso(ts: string): string {
 	return new Date(Number.parseFloat(ts) * 1000).toISOString();
 }
 
@@ -451,7 +457,12 @@ async function fetchFiles(
 		? new Set(config.channels)
 		: null;
 
+	let chIdx = 0;
 	for (const channelId of channelIds) {
+		chIdx++;
+		await slackLog(
+			`  Files: scanning channel ${chIdx}/${channelIds.length}${channelId ? ` (${channelId})` : ""}`,
+		);
 		const reqParams = { ...params };
 		if (channelId) reqParams.channel = channelId;
 
@@ -460,10 +471,14 @@ async function fetchFiles(
 
 		do {
 			reqParams.page = page.toString();
+			await slackLog(`  Files: page ${page}/${totalPages}`);
 			const data = await slackApi<{
 				files: SlackFile[];
 				paging: { pages: number; page: number };
 			}>("files.list", reqParams);
+			await slackLog(
+				`  Files: got ${data.files.length} files on page ${page}, total pages: ${data.paging.pages}`,
+			);
 
 			for (const file of data.files) {
 				// Skip files not in selected channels
@@ -820,10 +835,17 @@ async function compileChannelBased(
 	const latest = isoToSlackTs(config.endDate);
 
 	const channelTypes = "public_channel,private_channel,im,mpim";
+	await slackLog("Fetching channel list...");
 	const channels = await fetchChannels(channelTypes, config.channels);
+	await slackLog(`Found ${channels.length} channels to scan`);
 	const userFilterSet = config.users?.length ? new Set(config.users) : null;
 
+	let channelIndex = 0;
 	for (const channel of channels) {
+		channelIndex++;
+		await slackLog(
+			`Scanning channel ${channelIndex}/${channels.length}: #${channel.name}`,
+		);
 		const isDm = channel.is_im || channel.is_mpim;
 		// For DMs: use dmKeywords if provided, otherwise fall back to general keywords
 		// For channels: use general keywords (if any), but typically left empty to get everything
@@ -832,6 +854,9 @@ async function compileChannelBased(
 			: config.keywords;
 
 		const messages = await fetchMessages(channel.id, oldest, latest);
+		await slackLog(
+			`  #${channel.name}: ${messages.length} messages fetched, filtering...`,
+		);
 
 		for (const msg of messages) {
 			if (!msg.text || msg.type !== "message") continue;
@@ -914,7 +939,7 @@ async function compileChannelBased(
 	return items;
 }
 
-function buildSlackPermalink(
+export function buildSlackPermalink(
 	workspace: string | null,
 	channelId: string,
 	ts: string,
@@ -933,12 +958,14 @@ function buildSlackPermalink(
 // Module-level workspace domain cache
 let cachedWorkspace: string | null = null;
 
-async function getWorkspaceDomain(): Promise<string | null> {
+export async function getWorkspaceDomain(): Promise<string | null> {
 	if (cachedWorkspace) return cachedWorkspace;
 	try {
+		await slackLog("Resolving workspace domain via auth.test...");
 		const token = getUserToken() ?? getBotToken();
 		if (!token) return null;
 		const data = await slackApi<{ url: string }>("auth.test", {}, token);
+		await slackLog("Workspace domain resolved");
 		const match = data.url?.match(/https:\/\/([^.]+)\.slack\.com/);
 		if (match) {
 			cachedWorkspace = match[1];
@@ -960,11 +987,15 @@ export async function compileSlack(
 		hasUserToken && config.searchQuery && config.searchQuery.trim().length > 0;
 
 	// Resolve workspace domain once for permalink construction
+	await slackLog(
+		`Starting compilation: contentTypes=${contentTypes.join(",")}, channels=${config.channels?.length ?? "all"}`,
+	);
 	const workspace = await getWorkspaceDomain();
 
 	// Strategy A: search.messages when user token + searchQuery provided
 	// Strategy B: channel-based fetching otherwise
 	if (contentTypes.includes("messages")) {
+		await slackLog("Fetching messages...");
 		if (useSearch) {
 			const searchResults = await searchMessages(config);
 			items.push(...searchResults);
@@ -980,21 +1011,27 @@ export async function compileSlack(
 		contentTypes.includes("images") ||
 		contentTypes.includes("canvases")
 	) {
+		await slackLog("Fetching files/images/canvases...");
 		const fileItems = await fetchFiles(config);
+		await slackLog(`Files: ${fileItems.length} items found`);
 		items.push(...fileItems);
 	}
 
 	if (contentTypes.includes("pins")) {
+		await slackLog("Fetching pins...");
 		const channelIds =
 			config.channels ?? (await fetchChannels()).map((ch) => ch.id);
 		const pinItems = await fetchPins(channelIds, workspace);
+		await slackLog(`Pins: ${pinItems.length} items found`);
 		items.push(...pinItems);
 	}
 
 	if (contentTypes.includes("bookmarks")) {
+		await slackLog("Fetching bookmarks...");
 		const channelIds =
 			config.channels ?? (await fetchChannels()).map((ch) => ch.id);
 		const bookmarkItems = await fetchBookmarks(channelIds);
+		await slackLog(`Bookmarks: ${bookmarkItems.length} items found`);
 		items.push(...bookmarkItems);
 	}
 

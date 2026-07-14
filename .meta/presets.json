@@ -9,8 +9,8 @@
         {
           "source": "slack",
           "config": {
-            "startDate": "2026-03-23T23:39:14.784Z",
-            "endDate": "2026-03-26T23:39:14.784Z",
+            "startDate": "2026-06-22T00:00:00.000Z",
+            "endDate": "2026-06-25T23:59:59.000Z",
             "channels": [
               "C07GZ2JJL9F",
               "CD11D02TX",
@@ -34,52 +34,17 @@
         },
         {
           "source": "github",
-          "startDate": "2026-03-23T23:39:14.784Z",
-          "endDate": "2026-03-26T23:39:14.784Z",
+          "startDate": "2026-06-22T00:00:00.000Z",
+          "endDate": "2026-06-25T23:59:59.000Z",
           "repos": [
             "hq/messenger"
           ]
         },
         {
-          "source": "linear",
-          "startDate": "2026-03-23T23:39:14.784Z",
-          "endDate": "2026-03-26T23:39:14.784Z"
-        },
-        {
-          "source": "sentry",
-          "startDate": "2026-03-23T23:39:14.784Z",
-          "endDate": "2026-03-26T23:39:14.784Z",
-          "projects": [
-            "mdl-frontend",
-            "mdl-backend"
-          ]
-        },
-        {
-          "source": "trello",
-          "startDate": "2026-03-23T23:39:14.784Z",
-          "endDate": "2026-03-26T23:39:14.784Z",
-          "keywords": [
-            "MDL",
-            "messenger",
-            "M3",
-            "memorial",
-            "designer lab"
-          ]
-        },
-        {
-          "source": "huggingface",
-          "startDate": "2026-03-23T23:39:14.784Z",
-          "endDate": "2026-03-26T23:39:14.784Z",
-          "endpoints": [
-            "msgr-mio-ilx",
-            "msgr-mio-v2-oqq"
-          ]
-        },
-        {
           "source": "granola",
           "config": {
-            "startDate": "2026-03-23T23:39:14.784Z",
-            "endDate": "2026-03-26T23:39:14.784Z",
+            "startDate": "2026-06-22T00:00:00.000Z",
+            "endDate": "2026-06-25T23:59:59.000Z",
             "keywords": [
               "messenger",
               "Messenger",
@@ -88,9 +53,2335 @@
               "m3",
               "M3",
               "tinymce",
+              "lotus",
+              "Lotus",
               "Jose",
               "Oscar",
-              "Taryn"
+              "Taryn",
+              "HQ",
+              "Dignity"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "28648908-fe95-4c87-93f4-d5f37ee3508d",
+      "name": "mio-images",
+      "createdAt": "2026-03-27T20:14:01.707Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-02-27T00:00:00.000Z",
+            "endDate": "2026-03-27T23:59:59.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "canvases",
+              "images",
+              "pins",
+              "bookmarks"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-02-27T00:00:00.000Z",
+            "endDate": "2026-03-27T23:59:59.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-02-27T00:00:00.000Z",
+          "endDate": "2026-03-27T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2910ed84-2eef-4877-9302-38b85b7a4c8f",
+      "name": "mio-test",
+      "createdAt": "2026-03-27T20:40:04.106Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-20T00:00:00.000Z",
+            "endDate": "2026-03-27T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "25098d12-546b-401c-a362-22b775b57aae",
+      "name": "mio-images-m2",
+      "createdAt": "2026-03-27T20:48:03.389Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-01-27T00:00:00.000Z",
+            "endDate": "2026-02-27T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "canvases"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-01-27T00:00:00.000Z",
+            "endDate": "2026-02-27T00:00:00.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-01-27T00:00:00.000Z",
+          "endDate": "2026-02-27T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f6de7c89-12cc-45d2-af1e-6f824207d030",
+      "name": "mio-images-m3",
+      "createdAt": "2026-03-27T21:13:20.800Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-12-27T00:00:00.000Z",
+            "endDate": "2026-01-27T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "canvases"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2025-12-27T00:00:00.000Z",
+            "endDate": "2026-01-27T00:00:00.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2025-12-27T00:00:00.000Z",
+          "endDate": "2026-01-27T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9ba27d2b-0744-4d5d-82fd-f21c4c242b7d",
+      "name": "mio-images-m4",
+      "createdAt": "2026-03-27T21:13:37.810Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-11-27T00:00:00.000Z",
+            "endDate": "2025-12-27T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "canvases"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2025-11-27T00:00:00.000Z",
+            "endDate": "2025-12-27T00:00:00.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2025-11-27T00:00:00.000Z",
+          "endDate": "2025-12-27T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6746ad10-be5f-4cc2-8cb5-971dbe9ca56a",
+      "name": "mio-images-m5",
+      "createdAt": "2026-03-27T21:13:40.520Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-10-27T00:00:00.000Z",
+            "endDate": "2025-11-27T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "canvases"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2025-10-27T00:00:00.000Z",
+            "endDate": "2025-11-27T00:00:00.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2025-10-27T00:00:00.000Z",
+          "endDate": "2025-11-27T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "639cb8a7-4dd8-4bc5-82c4-56557ef3d748",
+      "name": "mio-images-m6",
+      "createdAt": "2026-03-27T21:13:43.807Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-09-27T00:00:00.000Z",
+            "endDate": "2025-10-27T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder image",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ],
+            "contentTypes": [
+              "messages",
+              "canvases"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2025-09-27T00:00:00.000Z",
+            "endDate": "2025-10-27T00:00:00.000Z",
+            "keywords": [
+              "MIO",
+              "mio",
+              "image",
+              "images",
+              "swap",
+              "default image",
+              "image swap",
+              "photo",
+              "placeholder",
+              "product image",
+              "background removal",
+              "remove background",
+              "image generation",
+              "AI image",
+              "generated image"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2025-09-27T00:00:00.000Z",
+          "endDate": "2025-10-27T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "MIO",
+            "mio",
+            "image",
+            "images",
+            "swap",
+            "default image",
+            "image swap",
+            "photo",
+            "placeholder",
+            "product image",
+            "background removal",
+            "remove background",
+            "image generation",
+            "AI image",
+            "generated image"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d02bbdae-7043-4f79-b5b8-e228dc366ae6",
+      "name": "thalia-dms",
+      "createdAt": "2026-03-31T18:16:23.585Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-25T00:00:00.000Z",
+            "endDate": "2026-03-31T23:59:59.000Z",
+            "users": [
+              "U0927SKPE6Q"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "798b490e-1baa-49f1-9992-67dd31601980",
+      "name": "slack-msg-apr1",
+      "createdAt": "2026-04-01T13:40:07.547Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-31T00:00:00.000Z",
+            "endDate": "2026-03-31T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "4d822b60-9d00-4dee-9a04-8ebc15279837",
+      "name": "trello-card-fetch",
+      "createdAt": "2026-04-02T04:44:00.603Z",
+      "sourceConfigs": [
+        {
+          "source": "trello",
+          "startDate": "2025-01-01T00:00:00.000Z",
+          "endDate": "2026-04-01T23:59:59.000Z"
+        }
+      ]
+    },
+    {
+      "id": "4c9157fa-fcc6-48d5-8f29-79066a20ab02",
+      "name": "belluga-font-thread",
+      "createdAt": "2026-04-02T04:55:01.603Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-28T00:00:00.000Z",
+            "endDate": "2026-04-02T00:00:00.000Z",
+            "channels": [
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "139ed292-751a-4592-bf31-5ac6a3279e71",
+      "name": "issue-2296-tinymce-line-spacing",
+      "createdAt": "2026-04-03T05:44:29.430Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "channels": [
+              "messenger_and_hq"
+            ],
+            "users": [
+              "dmollett"
+            ],
+            "startDate": "2025-12-01",
+            "endDate": "2026-04-02",
+            "contentTypes": [
+              "messages"
+            ]
+          },
+          "startDate": "2025-12-01",
+          "endDate": "2026-04-02"
+        },
+        {
+          "source": "github",
+          "config": {
+            "repos": [
+              "hq/messenger"
+            ],
+            "keywords": [
+              "line height",
+              "line spacing",
+              "TinyMCE",
+              "leading",
+              "font issues"
+            ]
+          },
+          "startDate": "2025-10-01",
+          "endDate": "2026-04-02"
+        },
+        {
+          "source": "trello",
+          "config": {
+            "keywords": [
+              "font issues",
+              "tiny mc",
+              "line spacing",
+              "line height"
+            ]
+          },
+          "startDate": "2025-06-01",
+          "endDate": "2026-04-02"
+        }
+      ]
+    },
+    {
+      "id": "ccfb0c64-8f41-4820-b264-9c055d0bde56",
+      "name": "slack-pdf-msg",
+      "createdAt": "2026-04-03T21:27:08.245Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-29T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "7a21ffe3-8570-401c-ab69-765b5902f33f",
+      "name": "pdf-proof-zoom-issue",
+      "createdAt": "2026-04-03T21:37:29.306Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-31T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "3fcf0e0a-0cc5-402e-8bc1-d125dc92a85e",
+      "name": "duane-guestbook-zoom",
+      "createdAt": "2026-04-03T22:28:10.956Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-10-01T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C096NA0CDGB"
+            ],
+            "keywords": [
+              "guest book",
+              "zoom",
+              "maximize",
+              "page load",
+              "send page",
+              "navigation",
+              "editor zoom",
+              "page navigation"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "trello",
+          "startDate": "2025-10-01T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "keywords": [
+            "guest book",
+            "zoom",
+            "maximize",
+            "page load",
+            "send page",
+            "navigation",
+            "editor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bca52959-7d60-4294-adf8-e2354166fb2b",
+      "name": "duane-zoom-recent",
+      "createdAt": "2026-04-03T22:40:19.432Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-02-01T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX"
+            ],
+            "keywords": [
+              "guest book",
+              "zoom",
+              "maximize",
+              "page load",
+              "send page",
+              "navigation"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "8c42c9ef-04e9-4a4e-85ee-4488c8d017e3",
+      "name": "duane-zoom-wider",
+      "createdAt": "2026-04-03T22:45:31.696Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-10-01T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX"
+            ],
+            "keywords": [
+              "guest book",
+              "guestbook",
+              "second page",
+              "2nd page",
+              "navigate",
+              "navigates",
+              "navigating",
+              "zoom",
+              "page 2"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "15fa39c7-d05d-4788-a8fe-54a1c640c4d9",
+      "name": "trello-full-search",
+      "createdAt": "2026-04-03T22:46:54.839Z",
+      "sourceConfigs": [
+        {
+          "source": "trello",
+          "startDate": "2025-06-01T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "keywords": [
+            "guest book",
+            "guestbook",
+            "zoom",
+            "maximize",
+            "page load",
+            "send page",
+            "navigate",
+            "navigating",
+            "second page",
+            "2nd page",
+            "editor zoom"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "11d7779d-a823-4163-a80a-98bc8694f91f",
+      "name": "sentry-issue-7385867389",
+      "createdAt": "2026-04-03T22:55:03.035Z",
+      "sourceConfigs": [
+        {
+          "source": "sentry",
+          "startDate": "2026-03-20T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "projects": [
+            "mdl-frontend",
+            "mdl-backend"
+          ]
+        },
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-03-20T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "keywords": [
+              "sentry",
+              "error",
+              "bug",
+              "crash",
+              "alert",
+              "production",
+              "500",
+              "exception",
+              "broken",
+              "failed",
+              "TypeError",
+              "RangeError",
+              "null",
+              "undefined"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-03-20T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "sentry",
+            "error",
+            "bug",
+            "fix",
+            "crash",
+            "production",
+            "hotfix",
+            "patch"
+          ]
+        },
+        {
+          "source": "linear",
+          "startDate": "2026-03-20T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z"
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-03-20T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "keywords": [
+            "sentry",
+            "error",
+            "bug",
+            "crash",
+            "production",
+            "broken",
+            "fix"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-03-20T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "keywords": [
+              "sentry",
+              "error",
+              "bug",
+              "crash",
+              "production",
+              "alert",
+              "broken"
+            ]
+          }
+        },
+        {
+          "source": "gmail",
+          "startDate": "2026-03-20T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "config": {
+            "startDate": "2026-03-20T00:00:00.000Z",
+            "endDate": "2026-04-03T23:59:59.000Z",
+            "keywords": [
+              "sentry",
+              "alert",
+              "error",
+              "production"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "f09f5bc5-bf67-43c8-899e-134cd24d5ca4",
+      "name": "trello-ui-changes",
+      "createdAt": "2026-04-03T23:03:40.658Z",
+      "sourceConfigs": [
+        {
+          "source": "trello",
+          "startDate": "2025-01-01T00:00:00.000Z",
+          "endDate": "2026-04-03T23:59:59.000Z",
+          "keywords": [
+            "UI changes",
+            "maximize",
+            "guest book",
+            "autosizes",
+            "first page",
+            "too large"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6984c45e-9bf4-456a-b2d3-a96246b4cd2d",
+      "name": "media-house-portal-deadlines",
+      "createdAt": "2026-04-07T18:00:53.010Z",
+      "sourceConfigs": [
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2025-10-01T00:00:00.000Z",
+            "endDate": "2026-04-07T23:59:59.000Z",
+            "keywords": [
+              "Media House",
+              "media house",
+              "MediaHouse",
+              "Salt Lake City",
+              "SLC",
+              "web portal",
+              "portal",
+              "Media House portal"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "249505e7-6279-4f44-8309-7122913bb7ce",
+      "name": "duane-autosizing-bug",
+      "createdAt": "2026-04-08T17:36:34.567Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-04-05T00:00:00.000Z",
+            "endDate": "2026-04-08T23:59:59.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "da7ba9f1-37fb-4c9f-b9f9-1787ddd17e87",
+      "name": "jackson-billing-apr8-9",
+      "createdAt": "2026-04-10T04:41:47.712Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-04-08T00:00:00.000Z",
+            "endDate": "2026-04-10T00:00:00.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-04-08T00:00:00.000Z",
+          "endDate": "2026-04-10T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "666564e1-e73e-4539-b1b1-2ec89dee9988",
+      "name": "harvest-billing-apr8-9",
+      "createdAt": "2026-04-10T19:11:25.184Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-04-08T00:00:00.000Z",
+            "endDate": "2026-04-10T00:00:00.000Z",
+            "channels": [
+              "CD11D02TX",
+              "C07GZ2JJL9F",
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-04-08T00:00:00.000Z",
+          "endDate": "2026-04-10T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-04-01T00:00:00.000Z",
+          "endDate": "2026-04-10T00:00:00.000Z",
+          "keywords": [
+            "MDL",
+            "messenger",
+            "M3",
+            "memorial",
+            "designer lab",
+            "dignity",
+            "case image",
+            "MIO",
+            "autosize",
+            "TinyMCE",
+            "migration"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-04-08T00:00:00.000Z",
+            "endDate": "2026-04-10T00:00:00.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "dignity",
+              "case image",
+              "MIO",
+              "autosize",
+              "TinyMCE",
+              "migration"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "2f939baa-721f-43a5-bdc5-c4423ea0f578",
+      "name": "text-editor-canvases-apr15-16",
+      "createdAt": "2026-04-18T15:51:29.453Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-04-14T00:00:00.000Z",
+            "endDate": "2026-04-18T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "canvases",
+              "files",
+              "messages"
+            ]
+          }
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-04-14T00:00:00.000Z",
+            "endDate": "2026-04-18T23:59:59.000Z",
+            "keywords": [
+              "text editor",
+              "ink metrics",
+              "Lotus",
+              "tinymce",
+              "tip tap",
+              "prosemirror",
+              "auto size",
+              "dynamic text",
+              "template style",
+              "messenger"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a10b4954-93d5-4e48-893c-85eb7c5dcfd0",
+      "name": "jackson-2026-05-07-session-recap",
+      "createdAt": "2026-05-07T17:04:12.897Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-06T00:00:00.000Z",
+            "endDate": "2026-05-08T00:00:00.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "C096NA0CDGB",
+              "CD11D02TX",
+              "D0AM2JGKUJX"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "f5d6fb01-e949-4a09-970c-2fb271645852",
+      "name": "jackson-2026-05-07-session-recap-public",
+      "createdAt": "2026-05-07T17:07:12.414Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-06T00:00:00.000Z",
+            "endDate": "2026-05-08T00:00:00.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "C096NA0CDGB",
+              "CD11D02TX"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ceeade53-29e5-4ce3-9c6e-598198a52b81",
+      "name": "noto-fonts-pr-context",
+      "createdAt": "2026-05-14T00:14:38.654Z",
+      "sourceConfigs": [
+        {
+          "source": "trello",
+          "startDate": "2025-06-01T00:00:00.000Z",
+          "endDate": "2026-05-13T23:59:59.000Z",
+          "keywords": [
+            "font",
+            "fonts",
+            "Noto",
+            "google font",
+            "google fonts",
+            "foreign language",
+            "language",
+            "emoji",
+            "alt code",
+            "TinyMCE",
+            "tiny mce",
+            "script",
+            "Bengali",
+            "Thai",
+            "Khmer",
+            "Arabic",
+            "Hebrew",
+            "Chinese",
+            "Japanese",
+            "Korean",
+            "heart",
+            "symbol",
+            "character"
+          ]
+        },
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2025-10-01T00:00:00.000Z",
+            "endDate": "2026-05-13T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C096NA0CDGB"
+            ],
+            "keywords": [
+              "Noto",
+              "google font",
+              "google fonts",
+              "foreign language",
+              "emoji",
+              "alt code",
+              "script font",
+              "Bengali",
+              "Thai",
+              "Khmer",
+              "Arabic",
+              "Hebrew",
+              "language font"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2025-10-01T00:00:00.000Z",
+          "endDate": "2026-05-13T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ],
+          "keywords": [
+            "Noto",
+            "google font",
+            "google fonts",
+            "foreign language",
+            "emoji",
+            "font",
+            "TinyMCE font",
+            "script font",
+            "2517"
+          ]
+        },
+        {
+          "source": "linear",
+          "startDate": "2025-10-01T00:00:00.000Z",
+          "endDate": "2026-05-13T23:59:59.000Z"
+        }
+      ]
+    },
+    {
+      "id": "4ff7590a-18a7-49f1-a0eb-a511438963cb",
+      "name": "slack-msg-may17-belluga",
+      "createdAt": "2026-05-18T17:28:07.015Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-16T00:00:00.000Z",
+            "endDate": "2026-05-18T23:59:59.000Z",
+            "channels": [
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "9456e3a1-3def-4667-bf1d-ffd8b52b4162",
+      "name": "duane-500s-may18",
+      "createdAt": "2026-05-18T17:57:54.002Z",
+      "sourceConfigs": [
+        {
+          "source": "datadog",
+          "startDate": "2026-05-18T17:00:00.000Z",
+          "endDate": "2026-05-18T20:00:00.000Z",
+          "query": "status:error"
+        }
+      ]
+    },
+    {
+      "id": "ecc6f8e7-0a1c-469c-a2fa-0e85338b57bd",
+      "name": "jose-pageset-msg-may18",
+      "createdAt": "2026-05-18T19:43:16.218Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-18T19:00:00.000Z",
+            "endDate": "2026-05-18T23:59:59.000Z",
+            "channels": [
+              "CD11D02TX"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "dd47ec4a-0f00-44c8-b2de-426ac87ff77e",
+      "name": "jackson-billing-may18",
+      "createdAt": "2026-05-19T13:22:19.802Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-18T00:00:00.000Z",
+            "endDate": "2026-05-18T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-05-18T00:00:00.000Z",
+          "endDate": "2026-05-18T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-05-10T00:00:00.000Z",
+          "endDate": "2026-05-18T23:59:59.000Z",
+          "keywords": [
+            "MDL",
+            "messenger",
+            "M3",
+            "memorial",
+            "designer lab",
+            "dignity",
+            "opacity",
+            "banner",
+            "proof",
+            "background",
+            "case image"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-05-18T00:00:00.000Z",
+            "endDate": "2026-05-18T23:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "dignity",
+              "proof",
+              "banner",
+              "background"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a4ad916a-d1b9-457a-9e19-e838e5c25108",
+      "name": "jackson-billing-may19",
+      "createdAt": "2026-05-20T00:19:07.780Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-19T00:00:00.000Z",
+            "endDate": "2026-05-19T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-05-19T00:00:00.000Z",
+          "endDate": "2026-05-19T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-05-19T00:00:00.000Z",
+            "endDate": "2026-05-19T23:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "m3",
+              "M3",
+              "dignity",
+              "proof",
+              "banner",
+              "background",
+              "case image",
+              "Jose",
+              "Duane"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "076d3276-42fb-41e0-bc6d-b73f47f5a9dd",
+      "name": "lotus-0.1.0-milestone",
+      "createdAt": "2026-05-21T16:53:31.944Z",
+      "sourceConfigs": [
+        {
+          "source": "trello",
+          "startDate": "2024-01-01T00:00:00.000Z",
+          "endDate": "2026-05-21T23:59:59.000Z",
+          "keywords": [
+            "TinyMCE",
+            "tinymce",
+            "tiny mce",
+            "text editor",
+            "text box",
+            "textbox",
+            "copy paste",
+            "copy and paste",
+            "font",
+            "fonts",
+            "Noto",
+            "google font",
+            "autosize",
+            "autosizing",
+            "undo",
+            "redo",
+            "italic",
+            "bold",
+            "all caps",
+            "all-caps",
+            "belluga",
+            "visitation",
+            "service info",
+            "service information",
+            "ui changes",
+            "snap to center",
+            "snap-to-center",
+            "alignment guide",
+            "margins",
+            "bleed",
+            "drag",
+            "warn",
+            "dynamic text",
+            "dynamic field",
+            "case detail",
+            "group items",
+            "ctrl click",
+            "shift click",
+            "global editable",
+            "verse",
+            "template",
+            "line height",
+            "line spacing",
+            "spacing",
+            "wrong name",
+            "not seeing",
+            "most up to date",
+            "obit",
+            "obituary",
+            "extra spaces",
+            "drop down",
+            "dropdown"
+          ]
+        },
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2024-10-01T00:00:00.000Z",
+            "endDate": "2026-05-21T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "keywords": [
+              "TinyMCE",
+              "Lotus",
+              "text editor",
+              "autosize",
+              "autosizing",
+              "dynamic text",
+              "font",
+              "Noto",
+              "copy paste",
+              "undo",
+              "redo",
+              "italic",
+              "bold",
+              "all caps",
+              "belluga",
+              "margin",
+              "bleed",
+              "snap",
+              "verse",
+              "template",
+              "Duane",
+              "Mollett"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "canvases",
+              "images",
+              "pins",
+              "bookmarks"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e58b6239-9e93-4305-baaf-3a5f5fb5be04",
+      "name": "jackson-billing-may27-29",
+      "createdAt": "2026-05-29T22:54:47.731Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-27T00:00:00.000Z",
+            "endDate": "2026-05-29T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-05-27T00:00:00.000Z",
+          "endDate": "2026-05-29T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-05-27T00:00:00.000Z",
+            "endDate": "2026-05-29T23:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "m3",
+              "M3",
+              "dignity",
+              "Lotus",
+              "lotus",
+              "TinyMCE",
+              "text editor",
+              "font",
+              "Noto",
+              "case image",
+              "behavior",
+              "hotfix",
+              "funeral home",
+              "proof"
+            ]
+          }
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-05-20T00:00:00.000Z",
+          "endDate": "2026-05-29T23:59:59.000Z",
+          "keywords": [
+            "MDL",
+            "messenger",
+            "M3",
+            "memorial",
+            "designer lab",
+            "dignity",
+            "Lotus",
+            "TinyMCE",
+            "font",
+            "Noto",
+            "case image",
+            "text editor",
+            "autosize",
+            "migration"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "45dd9770-520f-42b8-95dd-d9528deff70c",
+      "name": "slack-msg-jun1",
+      "createdAt": "2026-06-01T14:27:05.323Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-01T00:00:00.000Z",
+            "endDate": "2026-06-01T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e84b56d8-a07c-4ea3-8b67-c7e2f4b27c88",
+      "name": "parker-proof-endpoints-may25-jun1",
+      "createdAt": "2026-06-01T23:16:14.422Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-25T00:00:00.000Z",
+            "endDate": "2026-06-01T23:59:59.000Z",
+            "users": [
+              "U07GDPBMT8W"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ed771e53-1b75-4ff9-91bb-a97548a1ac46",
+      "name": "parker-jose-getcase-thread",
+      "createdAt": "2026-06-01T23:18:11.182Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-25T00:00:00.000Z",
+            "endDate": "2026-06-01T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "users": [
+              "U07GDPBMT8W",
+              "U05MYBEH7F0"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "272f1f4f-9bd3-4669-85dc-e4e5e375d918",
+      "name": "jackson-billing-jun1-2",
+      "createdAt": "2026-06-02T20:57:31.589Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-01T00:00:00.000Z",
+            "endDate": "2026-06-03T05:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-06-01T00:00:00.000Z",
+          "endDate": "2026-06-03T05:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-06-01T00:00:00.000Z",
+            "endDate": "2026-06-03T05:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "dignity",
+              "Lotus",
+              "lotus",
+              "ink metrics",
+              "proof",
+              "banner",
+              "font",
+              "Noto",
+              "all hands",
+              "all-hands",
+              "standup",
+              "HQ",
+              "weekly",
+              "sync",
+              "team"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "d236c521-3ab3-44b5-a688-3b8f6434689c",
+      "name": "granola-jun1-meetings",
+      "createdAt": "2026-06-02T21:29:31.349Z",
+      "sourceConfigs": [
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-06-01T00:00:00.000Z",
+            "endDate": "2026-06-02T06:00:00.000Z",
+            "keywords": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "c22c0cd7-47d3-422f-bc50-8cd62632f8fd",
+      "name": "sentry-issue-7526562974",
+      "createdAt": "2026-06-04T16:40:40.625Z",
+      "sourceConfigs": [
+        {
+          "source": "sentry",
+          "startDate": "2026-06-01T00:00:00.000Z",
+          "endDate": "2026-06-04T23:59:59.000Z",
+          "projects": [
+            "mdl-frontend",
+            "mdl-backend"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1c89f5e8-cea7-448e-95b3-50564fee2901",
+      "name": "messenger-harvest-jun4",
+      "createdAt": "2026-06-05T07:35:51.214Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-04T00:00:00.000Z",
+            "endDate": "2026-06-06T00:00:00.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "images"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-06-04T00:00:00.000Z",
+          "endDate": "2026-06-06T00:00:00.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b22f8933-45b4-400b-b649-b993c7c9faa2",
+      "name": "mip-sync-incident-jun5",
+      "createdAt": "2026-06-05T14:47:04.862Z",
+      "sourceConfigs": [
+        {
+          "source": "datadog",
+          "startDate": "2026-06-04T00:00:00.000Z",
+          "endDate": "2026-06-05T16:00:00.000Z",
+          "query": "\"graceful restart\" OR \"Worker health\" OR \"Worker started\" OR \"is now active\" OR \"heap out of memory\" OR \"Error R14\" OR stalled OR mipImageSync OR mipSync OR \"Image sync\""
+        }
+      ]
+    },
+    {
+      "id": "fb3ba03d-7630-4580-8ddb-59c457135ae8",
+      "name": "mip-structured-jun5",
+      "createdAt": "2026-06-05T15:08:31.474Z",
+      "sourceConfigs": [
+        {
+          "source": "datadog",
+          "startDate": "2026-06-04T00:00:00.000Z",
+          "endDate": "2026-06-05T16:00:00.000Z",
+          "query": "mip_sync OR mip_image_sync OR mip_get_cases_by_sage OR mip_verify_access OR mip_database_unhealthy"
+        }
+      ]
+    },
+    {
+      "id": "5049b0a3-7cc4-404b-ac97-c671c30dcb7b",
+      "name": "mip-sync-outage-jun5",
+      "createdAt": "2026-06-05T16:21:24.435Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-03T00:00:00.000Z",
+            "endDate": "2026-06-05T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-06-03T00:00:00.000Z",
+          "endDate": "2026-06-05T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d3e9cc36-0032-4abe-891c-6b84075e5bb7",
+      "name": "blind-spot-thisweek",
+      "createdAt": "2026-06-23T23:27:01.471Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-16T00:00:00.000Z",
+            "endDate": "2026-06-23T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "9935a13a-325f-4c58-b94c-654064177a09",
+      "name": "harvest-thu-fri",
+      "createdAt": "2026-06-29T00:43:42.377Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-25T06:00:00.000Z",
+            "endDate": "2026-06-27T05:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "canvases",
+              "images",
+              "pins",
+              "bookmarks"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-06-25T06:00:00.000Z",
+          "endDate": "2026-06-27T05:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-06-25T06:00:00.000Z",
+            "endDate": "2026-06-27T05:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "tinymce",
+              "lotus",
+              "Lotus",
+              "Jose",
+              "Oscar",
+              "Taryn",
+              "HQ",
+              "Dignity",
+              "demo",
+              "Lotus Demo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "6bc59dc8-4fd8-48be-beea-fa0c8e28d926",
+      "name": "harvest-billing-jun30-jul4",
+      "createdAt": "2026-07-05T17:44:52.877Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-05T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "canvases",
+              "images",
+              "pins",
+              "bookmarks"
+            ]
+          }
+        },
+        {
+          "source": "github",
+          "startDate": "2026-06-30T00:00:00.000Z",
+          "endDate": "2026-07-05T23:59:59.000Z",
+          "repos": [
+            "hq/messenger"
+          ]
+        },
+        {
+          "source": "granola",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-05T23:59:59.000Z",
+            "keywords": [
+              "messenger",
+              "Messenger",
+              "MDL",
+              "my designer lab",
+              "m3",
+              "M3",
+              "lotus",
+              "Lotus",
+              "harness",
+              "Jose",
+              "Oscar",
+              "Taryn",
+              "HQ",
+              "Dignity"
+            ]
+          }
+        },
+        {
+          "source": "trello",
+          "startDate": "2026-06-30T00:00:00.000Z",
+          "endDate": "2026-07-05T23:59:59.000Z"
+        }
+      ]
+    },
+    {
+      "id": "6ab119b3-7a30-4b53-a276-6bcefedca988",
+      "name": "messenger-harness-baseline",
+      "createdAt": "2026-07-13T22:18:46.239Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-01-01T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C07C77MJFRR",
+              "C08EBQXKZ60",
+              "C08FATU6QGN",
+              "C08LJUAB3L4",
+              "C0939BY217C",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "pins"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "4bd7b27f-f366-4ed2-a9fc-39716f001667",
+      "name": "messenger-harness-baseline-narrow",
+      "createdAt": "2026-07-13T22:21:14.249Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-05-01T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F",
+              "CD11D02TX",
+              "C08LJUAB3L4",
+              "C096NA0CDGB",
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages",
+              "files",
+              "pins"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "db8ee57f-a738-4d5e-bb1a-fdd31ee43610",
+      "name": "messenger-harness-diag",
+      "createdAt": "2026-07-13T22:22:25.480Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "CD11D02TX"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bacf3b1e-1f73-4aef-b0ca-5f13f43d1a13",
+      "name": "messenger-harness-diag-hq",
+      "createdAt": "2026-07-13T22:24:42.441Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C07GZ2JJL9F"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a291fba5-b46c-4503-85aa-2ed291a7f56d",
+      "name": "messenger-harness-diag-qa",
+      "createdAt": "2026-07-13T22:24:43.179Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C096NA0CDGB"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "701b0542-4346-4238-83ff-be2996dfb4b8",
+      "name": "messenger-harness-diag-mce",
+      "createdAt": "2026-07-13T22:25:23.371Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C08LJUAB3L4"
+            ],
+            "contentTypes": [
+              "messages"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "0f6c962d-d639-4f32-9a32-a79c97d59209",
+      "name": "messenger-harness-diag-m3",
+      "createdAt": "2026-07-13T22:25:24.442Z",
+      "sourceConfigs": [
+        {
+          "source": "slack",
+          "config": {
+            "startDate": "2026-06-30T00:00:00.000Z",
+            "endDate": "2026-07-13T23:59:59.000Z",
+            "channels": [
+              "C09BFP7PV6V"
+            ],
+            "contentTypes": [
+              "messages"
             ]
           }
         }

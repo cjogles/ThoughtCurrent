@@ -16,9 +16,9 @@ export async function listSlackChannels(): Promise<SlackChannelMeta[]> {
 		return channelCache.data;
 	}
 
-	const botToken = getBotToken();
-	const userToken = getUserToken();
-	const token = botToken ?? userToken;
+	// Prefer the user token: the bot token only lists channels/DMs the bot is in,
+	// so it under-reports your 1:1 DMs (bot sees ~12 ims vs ~47 for the user).
+	const token = getUserToken() ?? getBotToken();
 	if (!token) {
 		throw new Error("No Slack token configured");
 	}
