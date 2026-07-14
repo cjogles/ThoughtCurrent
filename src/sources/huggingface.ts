@@ -91,7 +91,7 @@ export async function compileHuggingFace(
 	// Filter by endpoint names if specified
 	const endpoints =
 		filter.endpoints && filter.endpoints.length > 0
-			? allEndpoints.filter((ep) => filter.endpoints!.includes(ep.name))
+			? allEndpoints.filter((ep) => filter.endpoints?.includes(ep.name))
 			: allEndpoints;
 
 	const items: CompilationItem[] = [];

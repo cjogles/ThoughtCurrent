@@ -11,6 +11,7 @@ export const sourceTypes = [
 	"trello",
 	"figma",
 	"gmail",
+	"posthog",
 	"manual",
 ] as const;
 
@@ -69,8 +70,25 @@ export const FigmaSourceConfigSchema = z.object({
 	config: FigmaFilterConfigSchema,
 });
 
+export const PosthogFilterConfigSchema = z.object({
+	startDate: z.string(),
+	endDate: z.string(),
+	urlContains: z.array(z.string()).optional(),
+	sessionIds: z.array(z.string()).optional(),
+	testids: z.array(z.string()).optional(),
+	events: z.array(z.string()).optional(),
+	includeRecordingsList: z.boolean().optional(),
+	hogql: z.array(z.string()).optional(),
+	limit: z.number().int().positive().optional(),
+});
+
+export const PosthogSourceConfigSchema = z.object({
+	source: z.literal("posthog"),
+	config: PosthogFilterConfigSchema,
+});
+
 export const GenericSourceConfigSchema = z.object({
-	source: SourceTypeSchema.exclude(["slack", "granola", "figma"]),
+	source: SourceTypeSchema.exclude(["slack", "granola", "figma", "posthog"]),
 	startDate: z.string(),
 	endDate: z.string(),
 	keywords: z.array(z.string()).optional(),
@@ -85,6 +103,7 @@ export const SourceFilterConfigSchema = z.discriminatedUnion("source", [
 	SlackSourceConfigSchema,
 	GranolaSourceConfigSchema,
 	FigmaSourceConfigSchema,
+	PosthogSourceConfigSchema,
 	GenericSourceConfigSchema,
 ]);
 

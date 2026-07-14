@@ -5,6 +5,7 @@ import { checkGmailHealth } from "./sources/gmail.js";
 import { checkGranolaHealth } from "./sources/granola.js";
 import { checkHuggingFaceHealth } from "./sources/huggingface.js";
 import { checkLinearHealth } from "./sources/linear.js";
+import { checkPosthogHealth } from "./sources/posthog.js";
 import { checkSentryHealth } from "./sources/sentry.js";
 import { checkSlackHealth } from "./sources/slack.js";
 import { checkTrelloHealth } from "./sources/trello.js";
@@ -23,6 +24,7 @@ const healthCheckers: Partial<
 	sentry: checkSentryHealth,
 	datadog: checkDatadogHealth,
 	huggingface: checkHuggingFaceHealth,
+	posthog: checkPosthogHealth,
 };
 
 export async function checkAllStatus(): Promise<SourceHealthCheck[]> {

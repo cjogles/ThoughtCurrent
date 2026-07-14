@@ -39,6 +39,7 @@ function getSourceFilename(source: SourceType): string {
 		trello: "cards.md",
 		figma: "comments.md",
 		gmail: "emails.md",
+		posthog: "sessions.md",
 		manual: "uploaded-docs.md",
 	};
 	return filenames[source] ?? "output.md";
@@ -448,6 +449,77 @@ export async function writeGmailGranularOutput(
 	];
 
 	await Bun.write(resolve(gmailDir, "_index.md"), indexLines.join("\n"));
+}
+
+export async function writePosthogGranularOutput(
+	outputDir: string,
+	items: CompilationItem[],
+): Promise<void> {
+	if (items.length === 0) return;
+
+	const posthogDir = resolve(outputDir, "posthog");
+	await mkdir(posthogDir, { recursive: true });
+
+	const sessions = items.filter((i) => i.metadata.type === "session");
+	const queries = items.filter((i) => i.metadata.type === "query");
+
+	if (sessions.length > 0) {
+		const header = `# PostHog Sessions\n\n> ${sessions.length} session(s) compiled on ${new Date().toLocaleDateString()}\n\n---\n\n`;
+		const body = sessions
+			.map((s) => `## ${s.title}\n\n${s.content}\n\n---\n\n`)
+			.join("");
+		await Bun.write(resolve(posthogDir, "sessions.md"), header + body);
+	}
+
+	if (queries.length > 0) {
+		const header = `# PostHog Queries\n\n> ${queries.length} HogQL passthrough(s) compiled on ${new Date().toLocaleDateString()}\n\n---\n\n`;
+		const body = queries
+			.map((q) => `## ${q.title}\n\n${q.content}\n\n---\n\n`)
+			.join("");
+		await Bun.write(resolve(posthogDir, "queries.md"), header + body);
+	}
+
+	const totalEvents = sessions.reduce(
+		(sum, s) => sum + ((s.metadata.eventCount as number) ?? 0),
+		0,
+	);
+	const withRecording = sessions.filter((s) => s.metadata.hasRecording).length;
+	const rageSessions = sessions.filter(
+		(s) => ((s.metadata.rageclicks as number) ?? 0) > 0,
+	).length;
+
+	const indexLines = [
+		"# PostHog Compilation Index",
+		"",
+		`> Compiled on ${new Date().toLocaleDateString()}`,
+		"",
+		"## Summary",
+		"",
+		`- **Sessions:** ${sessions.length}`,
+		`- **Total events:** ${totalEvents}`,
+		`- **Sessions with a recording:** ${withRecording}`,
+		`- **Sessions with rageclicks:** ${rageSessions}`,
+		`- **HogQL queries:** ${queries.length}`,
+		"",
+	];
+
+	if (sessions.length > 0) {
+		indexLines.push("## Sessions", "");
+		for (const s of sessions) {
+			const rage =
+				((s.metadata.rageclicks as number) ?? 0) > 0
+					? ` · ${s.metadata.rageclicks} rageclick(s)`
+					: "";
+			const rec = s.metadata.hasRecording ? " · 📹 recording" : "";
+			indexLines.push(
+				`- **${s.metadata.sessionId}** — ${s.metadata.eventCount} events${rage}${rec}`,
+				`  - Replay: ${s.sourceUrl}`,
+			);
+		}
+		indexLines.push("");
+	}
+
+	await Bun.write(resolve(posthogDir, "_index.md"), indexLines.join("\n"));
 }
 
 export async function writeCompiledMarkdown(

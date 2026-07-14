@@ -36,7 +36,7 @@ function formatMessage(
 	if (data) {
 		parts.push(` ${JSON.stringify(data)}`);
 	}
-	return parts.join("") + "\n";
+	return `${parts.join("")}\n`;
 }
 
 async function writeToFile(filePath: string, message: string): Promise<void> {
@@ -92,7 +92,7 @@ export class CompilationLogger {
 	}
 
 	async sourceStart(source: string): Promise<void> {
-		await this.log("info", source, `Starting fetch`);
+		await this.log("info", source, "Starting fetch");
 	}
 
 	async sourceComplete(

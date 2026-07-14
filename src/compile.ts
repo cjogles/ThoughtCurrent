@@ -7,6 +7,7 @@ import {
 	writeFigmaGranularOutput,
 	writeGmailGranularOutput,
 	writeGranolaGranularOutput,
+	writePosthogGranularOutput,
 	writeSlackGranularOutput,
 	writeSourceMarkdown,
 } from "./lib/writer.js";
@@ -24,6 +25,7 @@ import { compileGmail } from "./sources/gmail.js";
 import { compileGranola, compileGranolaWithConfig } from "./sources/granola.js";
 import { compileHuggingFace } from "./sources/huggingface.js";
 import { compileLinear } from "./sources/linear.js";
+import { compilePosthog } from "./sources/posthog.js";
 import { compileSentry } from "./sources/sentry.js";
 import { compileSlack } from "./sources/slack.js";
 import { compileTrello } from "./sources/trello.js";
@@ -166,6 +168,8 @@ async function runCompilation(
 				items = await compileGranolaWithConfig(sourceConfig.config);
 			} else if (sourceConfig.source === "figma") {
 				items = await compileFigma(sourceConfig.config);
+			} else if (sourceConfig.source === "posthog") {
+				items = await compilePosthog(sourceConfig.config);
 			} else {
 				const fetcher = genericSourceFetchers[source];
 				if (!fetcher) {
@@ -202,6 +206,8 @@ async function runCompilation(
 				await writeFigmaGranularOutput(outputDir, newItems);
 			} else if (source === "gmail") {
 				await writeGmailGranularOutput(outputDir, newItems);
+			} else if (source === "posthog") {
+				await writePosthogGranularOutput(outputDir, newItems);
 			} else {
 				await writeSourceMarkdown(outputDir, source, newItems);
 			}
@@ -305,7 +311,7 @@ function getSuggestedFix(source: string, error: string): string {
 		return `Resource not found. Check the ${source} configuration in your preset — the repo, channel, or file URL may have changed.`;
 	}
 	if (lower.includes("not set") || lower.includes("not configured")) {
-		return `Missing configuration. Add the required environment variable to ~/work/ThoughtCurrent/.env`;
+		return "Missing configuration. Add the required environment variable to ~/work/ThoughtCurrent/.env";
 	}
 
 	return `Check the error details above and verify your ${source} configuration.`;

@@ -161,10 +161,7 @@ export async function compileTrello(
 				`/boards/${board.id}/cards`,
 				"fields=id,name,desc,url,dateLastActivity,idList,idMembers,labels,closed",
 			),
-			trelloGet<TrelloList[]>(
-				`/boards/${board.id}/lists`,
-				"fields=id,name",
-			),
+			trelloGet<TrelloList[]>(`/boards/${board.id}/lists`, "fields=id,name"),
 		]);
 		const listMap = new Map(lists.map((l) => [l.id, l.name]));
 

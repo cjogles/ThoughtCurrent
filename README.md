@@ -20,6 +20,7 @@ ThoughtCurrent is a **read-only data pipe**. It fetches from your tools, normali
 | **Sentry** | Issues with stack traces, event metadata | Bearer token |
 | **Datadog** | Error logs (500s, configurable queries) | API key + App key |
 | **Hugging Face** | Inference endpoint status and errors | API token |
+| **PostHog** | Session event timelines + replay metadata via HogQL (extracts `data-testid`/text/aria from autocapture) | Personal API key |
 
 ## How It Works
 
@@ -88,6 +89,11 @@ DATADOG_APP_KEY=your-app-key
 # Hugging Face
 HF_TOKEN=hf_...
 # HF_NAMESPACE=BuiltByHQ  # default; your HF organization/user
+
+# PostHog (read-only, project-scoped personal API key — phx_...)
+POSTHOG_API_KEY=phx_...
+# POSTHOG_HOST=https://us.posthog.com  # default
+# POSTHOG_PROJECT_ID=138211            # default (MDL/messenger project)
 ```
 
 You only need tokens for the sources you plan to use. Everything else will show as `not_configured` in health checks.
@@ -266,6 +272,10 @@ output/
       text/
       comments/
       screenshots/
+    posthog/
+      _index.md               # Session/query counts, recordings, rageclicks
+      sessions.md             # Per-session event timelines (testid/text/aria + replay link)
+      queries.md              # Raw HogQL passthrough results as tables
     .meta/
       cache.json              # Dedup cache — incremental compilations skip cached items
     .logs/

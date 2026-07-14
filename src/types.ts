@@ -9,6 +9,7 @@ export type SourceType =
 	| "trello"
 	| "figma"
 	| "gmail"
+	| "posthog"
 	| "manual";
 
 export type CompilationStatus = "idle" | "running" | "completed" | "failed";
@@ -67,8 +68,25 @@ export interface FigmaSourceConfig {
 	config: FigmaFilterConfig;
 }
 
+export interface PosthogFilterConfig {
+	startDate: string; // required window lower bound (UTC), e.g. "2026-07-14 15:00"
+	endDate: string; // required window upper bound (UTC)
+	urlContains?: string[]; // discover sessions by $current_url substring (order ids, route fragments)
+	sessionIds?: string[]; // pull these sessions directly
+	testids?: string[]; // discover sessions by $autocapture data-testid
+	events?: string[]; // restrict to these event names (default: all)
+	includeRecordingsList?: boolean; // enrich sessions with recording metadata (default: true)
+	hogql?: string[]; // escape hatch: raw HogQL queries rendered as tables
+	limit?: number; // per-query row cap, paginated (default: 300)
+}
+
+export interface PosthogSourceConfig {
+	source: "posthog";
+	config: PosthogFilterConfig;
+}
+
 export interface GenericSourceConfig {
-	source: Exclude<SourceType, "slack" | "granola" | "figma">;
+	source: Exclude<SourceType, "slack" | "granola" | "figma" | "posthog">;
 	startDate: string;
 	endDate: string;
 	keywords?: string[];
@@ -83,6 +101,7 @@ export type SourceFilterConfig =
 	| SlackSourceConfig
 	| GranolaSourceConfig
 	| FigmaSourceConfig
+	| PosthogSourceConfig
 	| GenericSourceConfig;
 
 export interface CompilationItem {
