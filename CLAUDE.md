@@ -77,9 +77,32 @@ search_dms({ people: ["@owen", "caleb290"], query: "lunch" })
 
 ThoughtCurrent is a **read-only** data pipe:
 
-1. **NEVER modify source systems** — all API calls are GET/read-only
+1. **NEVER modify source systems** — every MCP tool and source fetcher only reads
 2. **NEVER overwrite .env** — always read first, append or edit individual lines
-3. **All source fetchers are read-scoped** — no POST/PUT/PATCH/DELETE to external APIs
+3. **All source fetchers are read-scoped** — no call creates, updates, or deletes anything
+   in a source system
+
+Note that "read-only" is about **semantics, not HTTP verb**. Several fetchers legitimately
+POST to query endpoints — Linear GraphQL, PostHog HogQL (`/query/`), Datadog log search,
+Granola `get-documents` — and Gmail POSTs to Google's OAuth endpoint to exchange/refresh
+tokens. These are reads. A new POST is fine if and only if it retrieves data; adding one
+that mutates state is the thing that's forbidden.
+
+### Exception: `SLACK_USER_TOKEN` carries `chat:write`
+
+The Slack user token in `.env` holds `chat:write` in addition to its ~30 read scopes. **No
+ThoughtCurrent code path uses it** — it exists for the out-of-band `dm-jackson` skill
+(`~/.claude/skills/dm-jackson/`), which reads the token straight from `.env` and calls
+`chat.postMessage` / `chat.update` itself, never through this MCP server.
+
+So the server is read-only; the *credential it shares* is not. Two consequences:
+
+- Don't "fix" the token by stripping `chat:write` — that breaks self-DMs.
+- Don't add write calls to `src/` on the grounds that the scope is there. If a write feature
+  is ever wanted, it goes behind an explicit new tool with its own approval, not smuggled
+  into a fetcher.
+
+`SLACK_BOT_TOKEN` remains entirely read-scoped.
 
 ## Compilation Output
 

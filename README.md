@@ -4,7 +4,7 @@ An MCP server that compiles text from multiple SaaS sources into local markdown 
 
 ## What It Does
 
-ThoughtCurrent is a **read-only data pipe**. It fetches from your tools, normalizes everything into markdown, and writes it locally so Claude (or you) can read it as context for any project.
+ThoughtCurrent is a **read-only data pipe**. It fetches from your tools, normalizes everything into markdown, and writes it locally so Claude (or you) can read it as context for any project. Every tool it exposes is read-only — it never writes back to a source system. (One credential it stores is broader than that; see [Read-only scope](#read-only-scope).)
 
 **Supported sources:**
 
@@ -53,6 +53,8 @@ Create a `.env` file in the project root:
 
 ```bash
 # Slack (user token preferred — sees DMs, private channels, etc.)
+# Read scopes are all ThoughtCurrent needs. If you also use the dm-jackson
+# skill, this token additionally carries chat:write — see "Read-only scope".
 SLACK_USER_TOKEN=xoxp-...
 # OR
 SLACK_BOT_TOKEN=xoxb-...
@@ -327,7 +329,7 @@ Error reports include:
 
 ## Key Design Decisions
 
-- **Read-only** — never writes to external systems. All API calls are GET/read-scoped.
+- **Read-only** — never creates, updates, or deletes anything in a source system. See [Read-only scope](#read-only-scope) for the details, including the one stored credential that is broader than read-only.
 - **Preset-based** — no per-project config files. Presets are centralized, reusable, and composable.
 - **Async compilation** — `compile` returns immediately with a job ID. Poll with `check_compilation`.
 - **Incremental** — cache stores external IDs per preset. Re-running only fetches new items since last compile.
@@ -335,6 +337,42 @@ Error reports include:
 - **Error persistence** — failed sources write detailed error reports that stay until resolved.
 - **No web UI** — Claude Code is the sole interface. The MCP server is a data pipe.
 - **stdio transport** — Claude Code manages the process lifecycle. No ports, no daemons.
+
+## Read-only scope
+
+ThoughtCurrent itself never writes to a source system. Nothing in `src/` creates, updates, or
+deletes anything anywhere — that holds at the level of the code, not just the token scopes.
+
+"Read-only" here means **semantics, not HTTP verb.** Several fetchers POST, and all of those
+POSTs are reads:
+
+| Call | Why it POSTs |
+|---|---|
+| Linear | GraphQL — queries go in a POST body |
+| PostHog | HogQL via `/api/projects/:id/query/` |
+| Datadog | Log search endpoint takes a POST body |
+| Granola | `get-documents` is POST-shaped |
+| Gmail | Google OAuth token exchange / refresh |
+
+If you extend a source, a new POST is fine when it retrieves data. Adding one that mutates
+state is the thing to avoid.
+
+The tokens are a separate question, and one of them is broader than read-only:
+
+| Credential | Scope posture |
+|---|---|
+| `SLACK_USER_TOKEN` | ~30 read scopes **+ `chat:write`** |
+| `SLACK_BOT_TOKEN` | Read scopes only |
+| All other sources | Read scopes only |
+
+`chat:write` is not used by anything in this repo. It is there for the `dm-jackson` Claude
+Code skill, which reads the token directly out of `.env` and calls Slack's `chat.postMessage`
+/ `chat.update` on its own — the MCP server is not in that path.
+
+The practical upshot: a compromise of `.env` would let an attacker post to Slack as you, which
+was not true before `chat:write` was added. That is the cost of the self-DM feature. If you
+don't use `dm-jackson`, drop `chat:write` from the app's User Token Scopes and reinstall —
+nothing here depends on it.
 
 ## File Extraction
 
